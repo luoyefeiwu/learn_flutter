@@ -39,6 +39,17 @@ class MyApp extends StatelessWidget {
               onSubmitted: (text) {
                 print("内容提交时回调 $text");
               },
+              enabled: true,
+              decoration: InputDecoration(
+                //添加装饰效果
+                //添加灰色填充色
+                fillColor: Colors.grey.shade200,
+                filled: true,
+                helperText: "用户名",
+                prefixIcon: Icon(Icons.person),
+                //左侧图标
+                suffixText: "用户名",
+              ),
             ),
           ),
         ),
