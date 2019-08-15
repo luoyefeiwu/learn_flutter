@@ -28,7 +28,66 @@ class _MyPageState extends State<MyPage> {
       tabBar: CupertinoTabBar(
         //选项卡背景色
         backgroundColor: CupertinoColors.lightBackgroundGray,
-        items: [],
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.home), title: Text("主页")),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.conversation_bubble),
+              title: Text("聊天")),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        return CupertinoTabView(
+          builder: (context) {
+            switch (index) {
+              case 0:
+                return HomePage();
+                break;
+              case 1:
+                return ChatPage();
+                break;
+              default:
+                return Container();
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+//主页
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      //基本布局结构，包含内容和导航栏
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("主页"),
+      ),
+      child: Center(
+        child: Text("主页", style: Theme.of(context).textTheme.button),
+      ),
+    );
+  }
+}
+
+//聊天界面
+class ChatPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        // 导航栏 包含左中右三部分
+        //中间标题
+        middle: Text("聊天面板"),
+        //右侧按钮
+        trailing: Icon(CupertinoIcons.add),
+        //左侧按钮
+        leading: Icon(CupertinoIcons.back),
+      ),
+      child: Center(
+        child: Text("聊天面板", style: Theme.of(context).textTheme.button),
       ),
     );
   }
