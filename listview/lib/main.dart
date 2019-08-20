@@ -6,7 +6,7 @@ void main() =>
 class MyApp extends StatelessWidget {
   final List<String> items;
 
-  MyApp({Key key, @required this.items}) : super(key: key);
+  MyApp({Key key, this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

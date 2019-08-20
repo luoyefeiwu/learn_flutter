@@ -5,7 +5,7 @@ import 'package:route_data/ProductDetail.dart';
 class ProductList extends StatelessWidget {
   final List<Product> products;
 
-  ProductList({Key key, @required this.products}) : super(key: key);
+  ProductList({Key key, this.products}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

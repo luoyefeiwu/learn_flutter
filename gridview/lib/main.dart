@@ -6,7 +6,7 @@ void main() =>
 class MyApp extends StatelessWidget {
   final List<String> items;
 
-  MyApp({Key key, @required this.items}) : super(key: key);
+  MyApp({Key key, this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +22,18 @@ class MyApp extends StatelessWidget {
             childAspectRatio: 1.0,
           ),
           children: <Widget>[
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
-            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
+            Image.network('https://www.baidu.com/img/baidu_jgylogo3.gif',
+                fit: BoxFit.cover),
           ],
         ),
 

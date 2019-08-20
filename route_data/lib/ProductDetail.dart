@@ -4,7 +4,7 @@ import 'package:route_data/Product.dart';
 class ProductDetail extends StatelessWidget {
   final Product product;
 
-  ProductDetail({Key key, @required this.product}) : super(key: key);
+  ProductDetail({Key key, this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
