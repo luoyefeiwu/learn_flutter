@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'chat/message_page.dart';
+import './contacts/contacts.dart';
 
 //应用页面使用有状态 Widget
 class App extends StatefulWidget {
@@ -10,20 +11,18 @@ class App extends StatefulWidget {
 
 //应用页面状态实现类
 class AppState extends State<App> {
-
   //当前选中页面索引
-  var _currentIndex=0;
+  var _currentIndex = 0;
 
   //聊天页面
   MessagePage message;
 
   //好友页面
+  //Contacts contacts;
 
   //我的页面
 
-  currentPage(){
-
-  }
+  currentPage() {}
 
   @override
   Widget build(BuildContext context) {
