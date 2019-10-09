@@ -47,7 +47,6 @@ flutter:
   assets:
     #加载页面图片资源
     - images/loading.jpeg
-
     #底部tab切换图片资源
     - images/contact_list_normal.png
     - images/contact_list_pressed.png
