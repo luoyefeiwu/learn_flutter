@@ -12,7 +12,7 @@ class _LoadingState extends State<LoadingPage> {
     super.initState();
     //在加载页面停顿3秒
     new Future.delayed(Duration(seconds: 3), () {
-      print("宴会app接口文档....");
+      print("宴会app....");
       Navigator.of(context).pushReplacementNamed("app");
     });
   }

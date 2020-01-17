@@ -6,7 +6,7 @@ class Business extends StatefulWidget {
   _BusinessState createState() => new _BusinessState();
 }
 
-class _BusinessState extends State<Business>{
+class _BusinessState extends State<Business> {
   @override
   void initState() {
     super.initState();
@@ -14,16 +14,21 @@ class _BusinessState extends State<Business>{
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: Stack(
-        children: <Widget>[
-          //加载页面居中背景图 使用cover模式
-          Image.asset(
-            "images/loading.jpeg",
-            fit: BoxFit.cover,
-          ),
-        ],
-      ),
+    return Scaffold(
+        appBar: AppBar(
+            title: Text(
+              "创建商机",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  //点击回调事件 弹出一句提示框
+                  Scaffold.of(context)
+                      .showSnackBar(new SnackBar(content: Text("返回")));
+                }),
+            centerTitle: true,
+            backgroundColor: Colors.green),
     );
   }
 }
