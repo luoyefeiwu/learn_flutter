@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class OrderStage extends StatefulWidget {
   @override
   State createState() {
-    new _OrderStageState()
+    new _OrderStageState();
   }
 }
 
@@ -15,6 +15,7 @@ class _OrderStageState extends State<OrderStage> {
 
   @override
   Widget build(BuildContext context) {
-    return new TabBarView();
+    //return new TabBarView();
+    // return new TabBarView();
   }
 }
