@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // 导入轮播插件
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_news/tool/net_manager.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -14,6 +15,12 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   //声明滚动控制器属性，用来实现上拉加载更多功能
   ScrollController _scrollController;
+  NetManager _netManager = NetManager();
+
+  void _requestData(int page) async {
+    String data = await _netManager.queryHomeDate(page);
+    print(data);
+  }
 
   @override
   void initState() {
