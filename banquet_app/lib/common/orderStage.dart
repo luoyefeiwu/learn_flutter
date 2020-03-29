@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class OrderStage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _OrderStageState extends State<OrderStage> {
                 itemCount: _categorys.length - 1,
                 scrollDirection: Axis.horizontal),
             color: Color.fromARGB(255, 244, 244, 235),
-           // height: 40,
+            // height: 40,
           )),
           Container(
             child: Column(
@@ -37,7 +38,10 @@ class _OrderStageState extends State<OrderStage> {
                   style: TextStyle(
                       fontSize: 14, color: Color.fromARGB(255, 0, 192, 147)),
                 ),
-                Text("。", style: TextStyle(fontSize: 8),)
+                Text(
+                  "。",
+                  style: TextStyle(fontSize: 8),
+                )
               ],
             ),
             color: Color.fromARGB(255, 244, 244, 235),
@@ -47,7 +51,8 @@ class _OrderStageState extends State<OrderStage> {
       ),
       height: 56,
       width: MediaQuery.of(context).size.width,
-      color: Color.fromARGB(255, 51, 51, 51),
+      // color: Color.fromARGB(255, 51, 51, 51),
+      color: Colors.white,
       margin: EdgeInsets.only(left: 10, top: 20, right: 10),
     );
   }
