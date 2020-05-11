@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../service/service_method.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   int page = 1;
   List<Map> hotGoodsList = [];
+
+  GlobalKey<RefreshFooterState> _footerkey=new GlobalKey<RefreshFooterState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -29,7 +32,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('百姓生活+'),
+        title: Text('练习 Demo '),
       ),
       body: FutureBuilder(
           future: getHomePageContent(),
@@ -49,34 +52,83 @@ class _HomePageState extends State<HomePage>
               String floor1Title = data['data']['floor1Pic']['PICURE_ADDRESS'];
               List<Map> floor1 = (data['data']['floor1'] as List).cast();
 
-              return SingleChildScrollView(
-                  child: Column(
-                children: <Widget>[
-                  SwiperDiy(
-                    swiperDateList: swiper,
-                  ),
-                  TopNavigator(
-                    navgatorList: navgatorList,
-                  ),
-                  AdBanner(
-                    adPricture: adPrcture,
-                  ),
-                  LeaderPhone(
-                    leaderImage: leaderImage,
-                    leaderPhone: leaderPhone,
-                  ),
-                  Recommend(
-                    recommendList: recommendList,
-                  ),
-                  FloorTitle(
-                    pirture_address: floor1Title,
-                  ),
-                  FloorContent(
-                    floorGoodsList: floor1,
-                  ),
-                  _hotGoods(),
-                ],
-              ));
+              return EasyRefresh(
+                child: ListView(
+                  children: <Widget>[
+                    SwiperDiy(
+                      swiperDateList: swiper,
+                    ),
+                    TopNavigator(
+                      navgatorList: navgatorList,
+                    ),
+                    AdBanner(
+                      adPricture: adPrcture,
+                    ),
+                    LeaderPhone(
+                      leaderImage: leaderImage,
+                      leaderPhone: leaderPhone,
+                    ),
+                    Recommend(
+                      recommendList: recommendList,
+                    ),
+                    FloorTitle(
+                      pirture_address: floor1Title,
+                    ),
+                    FloorContent(
+                      floorGoodsList: floor1,
+                    ),
+                    _hotGoods(),
+                  ],
+                ),
+                loadMore: () async {
+                  print('开始加载更多.....');
+                  await getRequest("homePageBelowten").then((data) {
+                    List<Map> newGoodsList = (data['data'] as List).cast();
+                    setState(() {
+                      hotGoodsList.addAll(newGoodsList);
+                      page++;
+                    });
+                  });
+                },
+                refreshFooter: ClassicsFooter(
+                  key: _footerkey,
+                  bgColor: Colors.white,
+                  textColor: Colors.pink,
+                  moreInfoColor: Colors.pink,
+                  showMore: true,
+                  noMoreText: '',
+                  moreInfo: '加载中',
+                  loadReadyText: '上拉加载.....',
+                ),
+              );
+//              return SingleChildScrollView(
+//                  child: Column(
+//                children: <Widget>[
+//                  SwiperDiy(
+//                    swiperDateList: swiper,
+//                  ),
+//                  TopNavigator(
+//                    navgatorList: navgatorList,
+//                  ),
+//                  AdBanner(
+//                    adPricture: adPrcture,
+//                  ),
+//                  LeaderPhone(
+//                    leaderImage: leaderImage,
+//                    leaderPhone: leaderPhone,
+//                  ),
+//                  Recommend(
+//                    recommendList: recommendList,
+//                  ),
+//                  FloorTitle(
+//                    pirture_address: floor1Title,
+//                  ),
+//                  FloorContent(
+//                    floorGoodsList: floor1,
+//                  ),
+//                  _hotGoods(),
+//                ],
+//              ));
             } else {
               return Center(child: Text('加载中...'));
             }
