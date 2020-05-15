@@ -43,15 +43,18 @@ Future homePageBelowten() async {
   }
 }
 
-Future getRequest(url) async {
+Future getRequest(url, {formData}) async {
   try {
     print('请求.....');
     Response response;
     Dio dio = new Dio();
     dio.options.contentType =
         ContentType.parse("application/x-www-form-urlencode");
-    int page = 1;
-    response = await dio.get(servicePath[url]);
+    if (formData == null) {
+      response = await dio.get(servicePath[url]);
+    } else {
+      response = await dio.get(servicePath[url], queryParameters: formData);
+    }
     if (response.statusCode == 200) {
       return response.data;
     } else {

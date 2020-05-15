@@ -3,6 +3,7 @@ import 'package:flutter_shop/provide/child_category.dart';
 import 'package:provide/provide.dart';
 import '../service/service_method.dart';
 import '../models/category.dart';
+import '../models/categoryGoodsList.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _CategoryPage extends State<CategoryPage> {
           children: <Widget>[
             LeftCategoryNav(),
             Column(
-              children: <Widget>[RightCategoryNav()],
+              children: <Widget>[RightCategoryNav(), CategoryGoodsList()],
             ),
           ],
         ),
@@ -142,6 +143,116 @@ class _RightCategoryNav extends State<RightCategoryNav> {
         child: Text(
           item.mallSubName,
           style: TextStyle(fontSize: ScreenUtil().setSp(28)),
+        ),
+      ),
+    );
+  }
+}
+
+//商品列表
+class CategoryGoodsList extends StatefulWidget {
+  @override
+  _CategoryGoodsList createState() => _CategoryGoodsList();
+}
+
+class _CategoryGoodsList extends State<CategoryGoodsList> {
+  List list = [];
+
+  @override
+  void initState() {
+    _getGoodsList();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Container(
+      width: ScreenUtil().setWidth(570),
+      // height: ScreenUtil().setHeight(900),
+      child: ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return _ListWidget(index);
+          }),
+    ));
+  }
+
+  void _getGoodsList() async {
+    var data = {'categoryId': '4', 'CategorySubId': '', 'page': 1};
+    await getRequest('getMallGoods', formData: data).then((data) {
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(data);
+      setState(() {
+        list = goodsList.data;
+      });
+    });
+  }
+
+//商品图片
+  Widget _goodsImage(int index) {
+    return Container(
+      width: ScreenUtil().setWidth(200),
+      child: Image.network(list[index].image),
+    );
+  }
+
+  //商品名称
+  Widget _goodsName(int index) {
+    return Container(
+      padding: EdgeInsets.all(5.0),
+      width: ScreenUtil().setWidth(370),
+      child: Text(
+        list[index].goodsName,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: ScreenUtil().setSp(28)),
+      ),
+    );
+  }
+
+  //商品价格
+  Widget _goodsPrice(int index) {
+    return Container(
+      width: ScreenUtil().setWidth(370),
+      margin: EdgeInsets.only(top: 20.0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            '价格￥${list[index].presentPrice}',
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(color: Colors.pink, fontSize: ScreenUtil().setSp(30)),
+          ),
+          Text(
+            '价格￥${list[index].oriPrice}',
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: Colors.black26, decoration: TextDecoration.lineThrough),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _ListWidget(int index) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border:
+                Border(bottom: BorderSide(width: 1.0, color: Colors.black12))),
+        child: Row(
+          children: <Widget>[
+            _goodsImage(index),
+            Column(
+              children: <Widget>[
+                _goodsName(index),
+                _goodsPrice(index),
+              ],
+            )
+          ],
         ),
       ),
     );
