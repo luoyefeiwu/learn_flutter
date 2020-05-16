@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_shop/provide/child_category.dart';
 import 'package:provide/provide.dart';
 import '../service/service_method.dart';
 import '../models/category.dart';
 import '../models/categoryGoodsList.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CategoryPage extends StatefulWidget {
   // final Widget child;
@@ -85,7 +87,8 @@ class _LeftCategoryNav extends State<LeftCategoryNav> {
       setState(() {
         list = category.data;
       });
-      Provide.value<ChildCategory>(context).getChildCategory(list[0]);
+      Provide.value<ChildCategory>(context)
+          .getChildCategory(list[0].bxMallSubDto);
     });
   }
 
@@ -156,6 +159,9 @@ class CategoryGoodsList extends StatefulWidget {
 }
 
 class _CategoryGoodsList extends State<CategoryGoodsList> {
+  GlobalKey<RefreshFooterState> _footerkey =
+      new GlobalKey<RefreshFooterState>();
+
   List list = [];
 
   @override
@@ -168,14 +174,36 @@ class _CategoryGoodsList extends State<CategoryGoodsList> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-      width: ScreenUtil().setWidth(570),
-      // height: ScreenUtil().setHeight(900),
-      child: ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            return _ListWidget(index);
-          }),
-    ));
+            width: ScreenUtil().setWidth(570),
+            // height: ScreenUtil().setHeight(900),
+            child: EasyRefresh(
+              child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return _ListWidget(index);
+                  }),
+              loadMore: () async {
+                print('开始加载更多.....');
+                Fluttertoast.showToast(
+                    msg: '已经到底了',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.pink,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              },
+              refreshFooter: ClassicsFooter(
+                key: _footerkey,
+                bgColor: Colors.white,
+                textColor: Colors.pink,
+                moreInfoColor: Colors.pink,
+                showMore: true,
+                noMoreText: '',
+                moreInfo: '加载中',
+                loadReadyText: '上拉加载.....',
+              ),
+            )));
   }
 
   void _getGoodsList() async {

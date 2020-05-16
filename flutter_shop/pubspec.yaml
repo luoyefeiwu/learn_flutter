@@ -32,6 +32,7 @@ dependencies:
   json_serializable: ^2.0.0
   json_model: ^0.0.2
   provide: ^1.0.2
+  fluttertoast: ^3.0.1
 
 dev_dependencies:
   flutter_test:
