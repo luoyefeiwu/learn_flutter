@@ -3,6 +3,7 @@ import './pages/index_page.dart';
 import 'package:provide/provide.dart';
 import './provide/counter.dart';
 import './provide/child_category.dart';
+import 'pages/detail_page.dart';
 
 void main() {
   var counter = Counter();
@@ -20,11 +21,13 @@ class MyApp extends StatelessWidget {
     // TODO: implement build
     return Container(
       child: MaterialApp(
-        title: '百姓生活+',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.pink),
-        home: IndexPage(),
-      ),
+          title: '百姓生活+',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(primaryColor: Colors.pink),
+          home: IndexPage(),
+          routes: <String, WidgetBuilder>{
+            "/detail": (BuildContext context) => new DetailsPage(),
+          }),
     );
   }
 }

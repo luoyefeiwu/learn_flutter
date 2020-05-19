@@ -5,6 +5,8 @@ import '../service/service_method.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
+import 'detail_page.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -15,8 +17,10 @@ class _HomePageState extends State<HomePage>
   int page = 1;
   List<Map> hotGoodsList = [];
 
-  GlobalKey<RefreshFooterState> _footerkey=new GlobalKey<RefreshFooterState>();
+  GlobalKey<RefreshFooterState> _footerkey =
+      new GlobalKey<RefreshFooterState>();
 
+  //保持状态
   @override
   bool get wantKeepAlive => true;
 
@@ -230,9 +234,21 @@ class SwiperDiy extends StatelessWidget {
       width: ScreenUtil().setWidth(750),
       child: Swiper(
         itemBuilder: (BuildContext content, int index) {
-          return Image.network(
-            "${swiperDateList[index]['image']}",
-            fit: BoxFit.fill,
+          return InkWell(
+            onTap: () {
+              //跳转到详情页面
+              Navigator.push(context,
+                  new MaterialPageRoute(builder: (BuildContext context) {
+                return new DetailsPage(
+                  goodsId: swiperDateList[index]['goodsId'],
+                );
+              }));
+              //  Navigator.of(context).pushNamed('/detail', arguments: {"id":swiperDateList[index]['goodsId']});
+            },
+            child: Image.network(
+              "${swiperDateList[index]['image']}",
+              fit: BoxFit.fill,
+            ),
           );
         },
         itemCount: swiperDateList.length,
@@ -442,12 +458,14 @@ class FloorContent extends StatelessWidget {
 
   FloorContent({Key key, this.floorGoodsList}) : super(key: key);
 
-  Widget _goodsItem(Map goods) {
+  Widget _goodsItem(Map goods, BuildContext context) {
     return Container(
       width: ScreenUtil().setWidth(375),
       child: InkWell(
         onTap: () {
-          print('点击了楼层商品');
+          //跳转
+          Navigator.of(context)
+              .pushNamed('/detail', arguments: {"id": goods['goodsId']});
         },
         child: Image.network(
           goods['image'],
@@ -457,28 +475,28 @@ class FloorContent extends StatelessWidget {
     );
   }
 
-  Widget _firstRow() {
+  Widget _firstRow(BuildContext context) {
     return Row(
       children: <Widget>[
         Container(
-          child: _goodsItem(floorGoodsList[0]),
+          child: _goodsItem(floorGoodsList[0], context),
           height: ScreenUtil().setHeight(800),
         ),
         Column(
           children: <Widget>[
-            _goodsItem(floorGoodsList[1]),
-            _goodsItem(floorGoodsList[2]),
+            _goodsItem(floorGoodsList[1], context),
+            _goodsItem(floorGoodsList[2], context),
           ],
         ),
       ],
     );
   }
 
-  Widget _otherGoods() {
+  Widget _otherGoods(BuildContext context) {
     return Row(
       children: <Widget>[
-        _goodsItem(floorGoodsList[3]),
-        _goodsItem(floorGoodsList[4]),
+        _goodsItem(floorGoodsList[3], context),
+        _goodsItem(floorGoodsList[4], context),
       ],
     );
   }
@@ -488,8 +506,8 @@ class FloorContent extends StatelessWidget {
     return Container(
       child: Column(
         children: <Widget>[
-          _firstRow(),
-          _otherGoods(),
+          _firstRow(context),
+          _otherGoods(context),
         ],
       ),
     );
