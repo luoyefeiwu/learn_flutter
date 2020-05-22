@@ -463,6 +463,7 @@ class FloorContent extends StatelessWidget {
       width: ScreenUtil().setWidth(375),
       child: InkWell(
         onTap: () {
+          print('点击楼层');
           //跳转
           Navigator.of(context)
               .pushNamed('/detail', arguments: {"id": goods['goodsId']});
