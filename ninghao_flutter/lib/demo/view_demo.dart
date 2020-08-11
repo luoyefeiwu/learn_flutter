@@ -2,43 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:ninghao_flutter/model/post.dart';
 
 class ViewDemo extends StatelessWidget {
-  Widget _pageItemBuilder(BuildContext context, int index) {
-    return Stack(
-      children: <Widget>[
-        SizedBox.expand(
-          child: Image.network(
-            posts[index].imageUrl,
-            fit: BoxFit.cover,
-          ),
+  List<Widget> _buildTitles(int length) {
+    return List.generate(length, (index) {
+      return Container(
+        color: Colors.grey[300],
+        alignment: Alignment(0.0, 0.0),
+        child: Text(
+          'Item $index',
+          style: TextStyle(fontSize: 18.0, color: Colors.grey),
         ),
-        Positioned(
-          bottom: 8.0,
-          left: 8.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                posts[index].title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                posts[index].author,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        )
-      ],
-    );
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return PageView.builder(
-      itemBuilder: _pageItemBuilder,
-      itemCount: posts.length,
-    );
+    return GridView.count(
+        crossAxisCount: 4,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+        scrollDirection: Axis.horizontal,
+        children: _buildTitles(100));
   }
 }
 
@@ -81,6 +65,47 @@ class PageViewDemo extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PageViewBuilderDemo extends StatelessWidget {
+  Widget _pageItemBuilder(BuildContext context, int index) {
+    return Stack(
+      children: <Widget>[
+        SizedBox.expand(
+          child: Image.network(
+            posts[index].imageUrl,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          bottom: 8.0,
+          left: 8.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                posts[index].title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                posts[index].author,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return PageView.builder(
+      itemBuilder: _pageItemBuilder,
+      itemCount: posts.length,
     );
   }
 }
