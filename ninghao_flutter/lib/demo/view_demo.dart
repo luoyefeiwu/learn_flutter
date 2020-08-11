@@ -8,6 +8,11 @@ class ViewDemo extends StatelessWidget {
       //pageSnapping: false,
       scrollDirection: Axis.vertical,
       onPageChanged: (currentPage) => debugPrint('Page：$currentPage'),
+      controller: PageController(
+        initialPage: 1,
+        viewportFraction: 0.85,
+        keepPage: false,
+      ),
       children: <Widget>[
         Container(
           color: Colors.brown[900],
