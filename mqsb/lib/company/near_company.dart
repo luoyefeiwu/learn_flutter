@@ -9,17 +9,20 @@ class _NearCompanyStatus extends State<NearCompany> {
   //查询条件
   Widget _search() {
     return Container(
-      child: Row(
+      child: Column(
         children: <Widget>[
           TextField(
-            autofocus: true,
             decoration: InputDecoration(
-                labelText: "用户名",
-                hintText: "用户名或邮箱",
-                prefixIcon: Icon(Icons.person)
+              hintText: "搜索",
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+//                  borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.all(10.0),
             ),
           ),
-          Text("取消")
+          Text("取消"),
         ],
       ),
     );
@@ -38,7 +41,7 @@ class _NearCompanyStatus extends State<NearCompany> {
                 Icons.arrow_back_ios,
                 size: 20.0,
               ),
-              Text("返回")
+//              Text("返回")
             ],
           ),
         ),
