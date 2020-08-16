@@ -29,7 +29,8 @@ class _NearCompanyStatus extends State<NearCompany> {
                   list = listCompany;
                 } else {
                   list = listCompany
-                      .where((element) => element.name.indexOf(v) > -1).toList();
+                      .where((element) => element.name.indexOf(v) > -1)
+                      .toList();
                 }
               },
               decoration: InputDecoration(
@@ -168,22 +169,26 @@ class _NearCompanyStatus extends State<NearCompany> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),
           title: Text("附近的责任单位"),
-          leading: Container(
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.arrow_back_ios,
-                  size: ScreenUtil().setSp(40),
-                ),
-                Text("返回")
-              ],
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.arrow_back_ios,
+                    size: ScreenUtil().setSp(40),
+                  ),
+                  Text("返回")
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
