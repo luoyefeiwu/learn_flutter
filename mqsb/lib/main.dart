@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'company/company_detail.dart';
 import 'company/near_company.dart';
 
 
@@ -22,6 +23,7 @@ class App extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             "/near": (BuildContext context) => NearCompany(),
             "/index": (BuildContext context) => Index(),
+            "/detail":(BuildContext context) => CompanyDetail(),
           }),
     );
   }

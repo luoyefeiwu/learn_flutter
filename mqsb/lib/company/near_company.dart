@@ -77,91 +77,94 @@ class _NearCompanyStatus extends State<NearCompany> {
         height: ScreenUtil().setHeight(1400),
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                      color: Colors.grey[100], width: ScreenUtil().setSp(20))),
-              child: Column(
-                children: [
-                  Row(
+            return GestureDetector(
+                onTap: () {Navigator.pushNamed(context, "/detail");},
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: Colors.grey[100],
+                          width: ScreenUtil().setSp(20))),
+                  child: Column(
                     children: [
-                      Icon(
-                        Icons.person,
-                        size: ScreenUtil().setSp(40),
-                        color: Colors.blue,
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: ScreenUtil().setSp(40),
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            "门店名称：" + listCompany[index].name,
+                            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "门店名称：" + listCompany[index].name,
-                        style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                      Divider(
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.home,
+                            size: ScreenUtil().setSp(40),
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            "注册地址：" + list[index].registerName,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(35),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.ac_unit,
+                            size: ScreenUtil().setSp(40),
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            "责任人：" + list[index].liablePerson,
+                            style: TextStyle(fontSize: ScreenUtil().setSp(35)),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.room,
+                            size: ScreenUtil().setSp(40),
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            "地址：" + list[index].address,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(35),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            size: ScreenUtil().setSp(40),
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            "负责人电话：" + list[index].phone,
+                            style: TextStyle(
+                              fontSize: ScreenUtil().setSp(35),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.home,
-                        size: ScreenUtil().setSp(40),
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        "注册地址：" + list[index].registerName,
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(35),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.ac_unit,
-                        size: ScreenUtil().setSp(40),
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        "责任人：" + list[index].liablePerson,
-                        style: TextStyle(fontSize: ScreenUtil().setSp(35)),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.room,
-                        size: ScreenUtil().setSp(40),
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        "地址：" + list[index].address,
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(35),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        size: ScreenUtil().setSp(40),
-                        color: Colors.blue,
-                      ),
-                      Text(
-                        "负责人电话：" + list[index].phone,
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(35),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+                ));
           },
           itemCount: list.length,
         ));

@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Index extends StatefulWidget {
   @override
-  State createState() => _Index();
+  State createState() => _IndexState();
 }
 
-class _Index extends State<Index> {
+class _IndexState extends State<Index> {
   int _currentIndex = 0;
 
   void _onTaphandler(int index) {
