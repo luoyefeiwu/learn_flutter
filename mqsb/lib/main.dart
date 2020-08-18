@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'company/company_detail.dart';
 import 'company/near_company.dart';
 
-
 import 'home/index.dart';
+import 'home/login.dart';
 
 void main() => runApp(App());
 
@@ -24,6 +24,7 @@ class App extends StatelessWidget {
             "/near": (BuildContext context) => NearCompany(),
             "/index": (BuildContext context) => Index(),
             "/detail":(BuildContext context) => CompanyDetail(),
+            "/login":(BuildContext context) => Login(),
           }),
     );
   }

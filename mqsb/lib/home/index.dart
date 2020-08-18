@@ -12,6 +12,7 @@ class _IndexState extends State<Index> {
   void _onTaphandler(int index) {
     setState(() {
       _currentIndex = index;
+      Navigator.pushNamed(context, "/login");
     });
   }
 
