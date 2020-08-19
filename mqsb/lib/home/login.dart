@@ -7,9 +7,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _checkboxRememberSelected = false; //记住密码
+  bool _checkboxAutomaticSelected = false; //立即登录
   @override
   Widget build(BuildContext context) {
-    bool _checkboxSelected = false; //维护复选框状态
     return Material(
       // height: ScreenUtil().setHeight(800),
       color: Colors.white,
@@ -94,11 +95,11 @@ class _LoginState extends State<Login> {
                 Row(
                   children: [
                     Checkbox(
-                      value: _checkboxSelected,
+                      value: _checkboxRememberSelected,
                       activeColor: Colors.red, //选中时的颜色
                       onChanged: (value) {
                         setState(() {
-                          _checkboxSelected = value;
+                          _checkboxRememberSelected = value;
                         });
                       },
                     ),
@@ -108,11 +109,12 @@ class _LoginState extends State<Login> {
                 Row(
                   children: [
                     Checkbox(
-                      value: _checkboxSelected,
+                      value: _checkboxAutomaticSelected,
                       activeColor: Colors.red, //选中时的颜色
-                      onChanged: (value) {
+                      //checkColor: Colors.red,
+                      onChanged: (bool value) {
                         setState(() {
-                          _checkboxSelected = value;
+                          _checkboxAutomaticSelected = value;
                         });
                       },
                     ),
@@ -135,14 +137,39 @@ class _LoginState extends State<Login> {
               onPressed: () {},
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(left: 20,top: 10),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "忘记密码",
-              style: TextStyle(color: Colors.blue),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("提示"),
+                      content: Text("您确定忘记密码?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("取消"),
+                          onPressed: () => Navigator.of(context).pop(), //关闭对话框
+                        ),
+                        FlatButton(
+                          child: Text("确认"),
+                          onPressed: () {
+                            // ... 执行删除操作
+                            Navigator.of(context).pop(true); //关闭对话框
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 20, top: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "忘记密码",
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
