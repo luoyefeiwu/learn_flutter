@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 
 class Login extends StatefulWidget {
-
   @override
-  State createState() =>_LoginState();
+  State createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    bool _checkboxSelected = false; //维护复选框状态
     return Material(
       // height: ScreenUtil().setHeight(800),
       color: Colors.white,
@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
           ),
           Container(
             //height: ScreenUtil().setSp(100),
-            margin: EdgeInsets.all(30),
+            margin: EdgeInsets.all(20),
             //alignment: Alignment.centerLeft,
             child: TextField(
               decoration: InputDecoration(
@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 30, right: 30),
+            margin: EdgeInsets.only(left: 20, right: 20),
             //alignment: Alignment.centerLeft,
             child: TextField(
               decoration: InputDecoration(
@@ -87,13 +87,56 @@ class _LoginState extends State<Login> {
             ),
           ),
           Container(
-              child: Row(
-            children: [Text("记住密码"), Text("自动登录")],
-          )),
-          Container(
-            child: Text("立即登录"),
+            margin: EdgeInsets.only(right: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _checkboxSelected,
+                      activeColor: Colors.red, //选中时的颜色
+                      onChanged: (value) {
+                        setState(() {
+                          _checkboxSelected = value;
+                        });
+                      },
+                    ),
+                    Text("记住密码"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _checkboxSelected,
+                      activeColor: Colors.red, //选中时的颜色
+                      onChanged: (value) {
+                        setState(() {
+                          _checkboxSelected = value;
+                        });
+                      },
+                    ),
+                    Text("自动登录")
+                  ],
+                ),
+              ],
+            ),
           ),
           Container(
+            width: ScreenUtil().setSp(1000),
+            child: FlatButton(
+              color: Colors.blue,
+              highlightColor: Colors.blue[700],
+              colorBrightness: Brightness.dark,
+              splashColor: Colors.grey,
+              child: Text("立即登录"),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              onPressed: () {},
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 20,top: 10),
             alignment: Alignment.centerLeft,
             child: Text(
               "忘记密码",
