@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+
+  @override
+  State createState() =>_LoginState();
+}
+
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -89,7 +95,10 @@ class Login extends StatelessWidget {
           ),
           Container(
             alignment: Alignment.centerLeft,
-            child: Text("忘记密码",style: TextStyle(color: Colors.blue),),
+            child: Text(
+              "忘记密码",
+              style: TextStyle(color: Colors.blue),
+            ),
           )
         ],
       ),
