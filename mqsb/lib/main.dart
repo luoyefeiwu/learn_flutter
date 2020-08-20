@@ -4,6 +4,7 @@ import 'company/near_company.dart';
 
 import 'home/index.dart';
 import 'home/login.dart';
+import 'violation/feedback.dart';
 
 void main() => runApp(App());
 
@@ -23,8 +24,9 @@ class App extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             "/near": (BuildContext context) => NearCompany(),
             "/index": (BuildContext context) => Index(),
-            "/detail":(BuildContext context) => CompanyDetail(),
-            "/login":(BuildContext context) => Login(),
+            "/detail": (BuildContext context) => CompanyDetail(),
+            "/login": (BuildContext context) => Login(),
+            "/feedback": (BuildContext context) => FeedbackCase(),
           }),
     );
   }

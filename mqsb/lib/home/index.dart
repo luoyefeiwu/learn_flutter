@@ -12,7 +12,7 @@ class _IndexState extends State<Index> {
   void _onTaphandler(int index) {
     setState(() {
       _currentIndex = index;
-      Navigator.pushNamed(context, "/login");
+      Navigator.pushNamed(context, "/feedback");
     });
   }
 
@@ -50,7 +50,6 @@ class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    bool result = false;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
