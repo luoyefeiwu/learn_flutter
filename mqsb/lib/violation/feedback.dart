@@ -85,7 +85,69 @@ class _FeedbackCaseState extends State<FeedbackCase> {
                       ],
                     )),
               ),
-            )
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(top: 10, left: 20),
+              child: Text("语言/文字描述"),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 20, top: 10, right: 20),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    TextField(
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        hintText: "请填写消息文字说明，或选择语音",
+                        hintStyle: TextStyle(
+                            fontSize: ScreenUtil().setSp(13),
+                            color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        contentPadding: EdgeInsets.all(10.0),
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Icon(
+                          Icons.mic_none,
+                          color: Colors.blue,
+                        ))
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Text("常用语 "),
+                  Expanded(
+                    child: Text(
+                      "责任单位已处理",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "已处理",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "责任单位已删除",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
