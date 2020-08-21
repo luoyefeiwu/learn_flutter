@@ -11,6 +11,7 @@ class _FeedbackCaseState extends State<FeedbackCase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),
@@ -64,11 +65,12 @@ class _FeedbackCaseState extends State<FeedbackCase> {
                   border: Border.all(color: Colors.red, width: 1),
                 ),
                 child: Container(
-                    width: 20,
+                    width: 200,
                     height: 800,
                     color: Colors.grey[100],
                     margin: EdgeInsets.only(
-                        top: 10, left: 10, right: 10, bottom: 20),
+                        top: 10, left: 10,right: ScreenUtil().setWidth(700), bottom: 20),
+
                     child: Column(
                       children: [
                         Align(
@@ -89,7 +91,9 @@ class _FeedbackCaseState extends State<FeedbackCase> {
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(top: 10, left: 20),
-              child: Text("语言/文字描述"),
+              child: Text("语音/文字描述",style: TextStyle(
+                fontSize: ScreenUtil().setSp(50)
+              ),),
             ),
             Container(
               padding: EdgeInsets.only(left: 20, top: 10, right: 20),
