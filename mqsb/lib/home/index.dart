@@ -12,7 +12,11 @@ class _IndexState extends State<Index> {
   void _onTaphandler(int index) {
     setState(() {
       _currentIndex = index;
-      Navigator.pushNamed(context, "/feedback");
+      if (_currentIndex == 1) {
+        Navigator.pushNamed(context, "/violationList");
+      }else{
+        Navigator.pushNamed(context, "/feedback");
+      }
     });
   }
 

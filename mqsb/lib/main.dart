@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mqsb/violation/violationList.dart';
 import 'company/company_detail.dart';
 import 'company/near_company.dart';
 
@@ -27,6 +28,8 @@ class App extends StatelessWidget {
             "/detail": (BuildContext context) => CompanyDetail(),
             "/login": (BuildContext context) => Login(),
             "/feedback": (BuildContext context) => FeedbackCase(),
+            "/violationList": (BuildContext context) => ViolationList(),
+
           }),
     );
   }
