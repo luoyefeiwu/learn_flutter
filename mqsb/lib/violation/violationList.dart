@@ -63,16 +63,76 @@ class _ViolationListState extends State<ViolationList> {
   //违规
   Widget _listItemBuilder(BuildContext context, int index) {
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(3.0),
+//          boxShadow: [
+//            //阴影
+//            BoxShadow(
+//              color: Colors.white,
+//              //offset: Offset(2.0,2.0),
+//              blurRadius: 10.0,
+//            )
+        //    ]
+      ),
+      //color: Colors.white,
       margin: EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          Text("1")
-//          Image.network(posts[index].imageUrl),
-//          SizedBox(height: 16.0),
-//          Text(posts[index].title, style: Theme.of(context).textTheme.title),
-//          Text(posts[index].author, style: Theme.of(context).textTheme.subhead),
-//          SizedBox(height: 16.0),
+      height: ScreenUtil().setHeight(200),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Container(
+                margin: EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("金棕护肤造型${index}")),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.book,
+                          color: Colors.blueAccent,
+                        ),
+                        Text(
+                          "处理反馈",
+                          style: TextStyle(color: Colors.blueAccent),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+          Expanded(
+              flex: 1,
+              child: Container(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.phone),
+                        Text("(010)1891149452${index}"),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.surround_sound,
+                          color: Colors.redAccent,
+                        ),
+                        Text(
+                          "点击提醒",
+                          style: TextStyle(color: Colors.redAccent),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
     );
@@ -122,7 +182,19 @@ class _ViolationListState extends State<ViolationList> {
       ),
       body: Container(
         child: Column(
-          children: [_search(), _violation()],
+          children: [
+            _search(),
+            Container(
+              alignment: Alignment.centerLeft,
+              color: Colors.grey[100],
+              margin: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              child: Text(
+                "责任单位未处理",
+                style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+              ),
+            ),
+            Expanded(child: _violation())
+          ],
         ),
       ),
     );
