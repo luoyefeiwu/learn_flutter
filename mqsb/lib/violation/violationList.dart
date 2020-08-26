@@ -188,10 +188,20 @@ class _ViolationListState extends State<ViolationList> {
               alignment: Alignment.centerLeft,
               color: Colors.grey[100],
               margin: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-              child: Text(
-                "责任单位未处理",
-                style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+              child: Row(
+                children: [
+                  Text(
+                    "责任单位未处理",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Icon(Icons.arrow_downward),
+                ],
               ),
+
+//              Text(
+//                "责任单位未处理",
+//                style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+//              ),
             ),
             Expanded(child: _violation())
           ],

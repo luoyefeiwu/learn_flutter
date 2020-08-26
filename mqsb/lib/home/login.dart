@@ -9,8 +9,12 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _checkboxRememberSelected = false; //记住密码
   bool _checkboxAutomaticSelected = false; //立即登录
+  TextEditingController _loginNameController = TextEditingController();
+  TextEditingController _passWorldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     return Material(
       // height: ScreenUtil().setHeight(800),
       color: Colors.white,
@@ -48,6 +52,7 @@ class _LoginState extends State<Login> {
             margin: EdgeInsets.all(20),
             //alignment: Alignment.centerLeft,
             child: TextField(
+              controller: _loginNameController,
               decoration: InputDecoration(
                 hintText: "用户名",
                 hintStyle: TextStyle(
@@ -67,8 +72,8 @@ class _LoginState extends State<Login> {
           ),
           Container(
             margin: EdgeInsets.only(left: 20, right: 20),
-            //alignment: Alignment.centerLeft,
             child: TextField(
+              controller: _passWorldController,
               decoration: InputDecoration(
                 hintText: "密码",
                 hintStyle: TextStyle(
@@ -134,7 +139,36 @@ class _LoginState extends State<Login> {
               child: Text("立即登录"),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
-              onPressed: () {},
+              onPressed: () {
+                //如果用户名为 admin,密码为1,跳转到index 页面
+                if (_loginNameController.text == 'admin' &&
+                    _passWorldController.text == '1') {
+                  Navigator.pushNamed(context, "/index");
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('提示'),
+                          content: Text("用户名或密码错误"),
+                          actions: [
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); //关闭对话框
+                                },
+                                child: Text('取消')),
+                            FlatButton(
+                              child: Text("确认"),
+                              onPressed: () {
+                                // ... 执行删除操作
+                                Navigator.of(context).pop(true); //关闭对话框
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                }
+              },
             ),
           ),
           GestureDetector(

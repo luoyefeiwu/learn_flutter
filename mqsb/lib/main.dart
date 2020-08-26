@@ -21,7 +21,7 @@ class App extends StatelessWidget {
           title: 'Demo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(primaryColor: Colors.blue),
-          home: Index(),
+          home: Login(),
           routes: <String, WidgetBuilder>{
             "/near": (BuildContext context) => NearCompany(),
             "/index": (BuildContext context) => Index(),

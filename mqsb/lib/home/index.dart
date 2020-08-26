@@ -53,7 +53,7 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
