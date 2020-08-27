@@ -10,7 +10,6 @@ class ViolationList extends StatefulWidget {
 
 class _ViolationListState extends State<ViolationList> {
   List<Company> list = listCompany;
-
   TextEditingController _searchController = TextEditingController();
 
   //查询条件
@@ -67,14 +66,6 @@ class _ViolationListState extends State<ViolationList> {
         color: Colors.white,
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(3.0),
-//          boxShadow: [
-//            //阴影
-//            BoxShadow(
-//              color: Colors.white,
-//              //offset: Offset(2.0,2.0),
-//              blurRadius: 10.0,
-//            )
-        //    ]
       ),
       //color: Colors.white,
       margin: EdgeInsets.all(8.0),
@@ -88,10 +79,16 @@ class _ViolationListState extends State<ViolationList> {
                 alignment: Alignment.centerLeft,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  textDirection: TextDirection.ltr,
                   children: [
                     Align(
                         alignment: Alignment.centerLeft,
-                        child: Text("金棕护肤造型${index}")),
+                        child: GestureDetector(
+                          child: Text("金棕护肤造型${index}"),
+                          onTap: (){
+                            Navigator.pushNamed(context, "/violationInfo");
+                          },
+                        )),
                     Row(
                       children: [
                         Icon(
@@ -191,17 +188,12 @@ class _ViolationListState extends State<ViolationList> {
               child: Row(
                 children: [
                   Text(
-                    "责任单位未处理",
+                    "单位未处理",
                     style: TextStyle(fontSize: ScreenUtil().setSp(45)),
                   ),
                   Icon(Icons.arrow_downward),
                 ],
               ),
-
-//              Text(
-//                "责任单位未处理",
-//                style: TextStyle(fontSize: ScreenUtil().setSp(45)),
-//              ),
             ),
             Expanded(child: _violation())
           ],

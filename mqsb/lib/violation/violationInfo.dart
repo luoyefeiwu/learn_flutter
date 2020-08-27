@@ -8,20 +8,23 @@ class ViolationInfo extends StatefulWidget {
 }
 
 class _violationInfoState extends State<ViolationInfo> {
-  //title
+  //头部信息
   Widget _title() {
     return Container(
       color: Colors.grey[100],
-      height: ScreenUtil().setHeight(200),
-      child: Text("责任单位信息"),
+      height: ScreenUtil().setHeight(100),
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 20),
+      child: Text("责任单位信息", style: TextStyle(fontSize: ScreenUtil().setSp(45))),
     );
   }
 
   //责任单位内容
   Widget _content() {
     return Container(
+      color: Colors.white,
       padding: EdgeInsets.all(20),
-      margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+      margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: [
           Container(
@@ -29,7 +32,7 @@ class _violationInfoState extends State<ViolationInfo> {
             children: [
               Row(
                 children: [
-                  Text("门头名称:"),
+                  Align(child: Text("门头名称:")),
                   Text("马兰拉面"),
                 ],
               ),
@@ -125,7 +128,7 @@ class _violationInfoState extends State<ViolationInfo> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),
-        title: Text("处理反馈"),
+        title: Text("违规详情"),
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
@@ -158,53 +161,61 @@ class _violationInfoState extends State<ViolationInfo> {
             _content(),
             _description(),
             Container(
+                margin: EdgeInsets.all(20),
                 child: Row(
-              children: [
-                FlatButton(
-                  color: Colors.blue,
-                  highlightColor: Colors.blue[700],
-                  colorBrightness: Brightness.dark,
-                  splashColor: Colors.grey,
-                  child: Text("处理反馈"),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text("提示"),
-                            content: Text("点击处理反馈了"),
-                            actions: [
-                              FlatButton(
-                                child: Text("取消"),
-                                onPressed: () =>
-                                    Navigator.of(context).pop(), //关闭对话框
-                              ),
-                              FlatButton(
-                                child: Text("确认"),
-                                onPressed: () {
-                                  // ... 执行删除操作
-                                  Navigator.of(context).pop(true); //关闭对话框
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                ),
-                FlatButton(
-                  color: Colors.blue,
-                  highlightColor: Colors.redAccent,
-                  colorBrightness: Brightness.dark,
-                  splashColor: Colors.grey,
-                  child: Text("上报城管"),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {},
-                ),
-              ],
-            )),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: ScreenUtil().setWidth(400),
+                      child: FlatButton(
+                        color: Colors.blue,
+                        highlightColor: Colors.blue,
+                        colorBrightness: Brightness.dark,
+                        splashColor: Colors.grey,
+                        child: Text("处理反馈"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("提示"),
+                                  content: Text("点击处理反馈了"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("取消"),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(), //关闭对话框
+                                    ),
+                                    FlatButton(
+                                      child: Text("确认"),
+                                      onPressed: () {
+                                        // ... 执行删除操作
+                                        Navigator.of(context).pop(true); //关闭对话框
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: ScreenUtil().setWidth(450),
+                      child: FlatButton(
+                        color: Colors.red,
+                        highlightColor: Colors.redAccent,
+                        colorBrightness: Brightness.dark,
+                        splashColor: Colors.grey,
+                        child: Text("上报城管"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                )),
           ],
         ),
       ),
