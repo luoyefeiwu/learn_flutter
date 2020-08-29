@@ -31,56 +31,135 @@ class _violationInfoState extends State<ViolationInfo> {
               child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Align(child: Text("门头名称:")),
-                  Text("马兰拉面"),
+                  Text(
+                    "门头名称:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "马兰拉面",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("注册名称:"),
-                  Text("好味道食品有限公司"),
+                  Text(
+                    "注册名称:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "好味道食品有限公司",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("营业执照:"),
-                  Text("有"),
+                  Text(
+                    "营业执照:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "有",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("三包责任书:"),
-                  Text("无"),
+                  Text(
+                    "三包责任书:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "无",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               //画线
               Divider(
                 color: Colors.grey,
               ),
-              Text("三包责任范围"),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "三包责任范围",
+                  style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                ),
+              ),
               Row(
                 children: [
-                  Text("东至:"),
-                  Text("好再来超市西侧"),
+                  Text(
+                    "东至:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "好再来超市西侧",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("南至:"),
-                  Text("门前3米内"),
+                  Text(
+                    "南至:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "门前3米内",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("西至:"),
-                  Text("市政道路界面3米处"),
+                  Text(
+                    "西至:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "市政道路界面3米处",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text("北至:"),
-                  Text("停车场栏杆1米处"),
+                  Text(
+                    "北至:",
+                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "停车场栏杆1米处",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+                    ),
+                  )
                 ],
               ),
             ],
@@ -98,7 +177,11 @@ class _violationInfoState extends State<ViolationInfo> {
       children: [
         Row(
           children: [
-            Text("违规内容"),
+            Expanded(
+              flex: 1,
+              child: Text("违规内容"),
+            ),
+            Expanded()
             Icon(Icons.label),
             Text("点击提醒"),
           ],
