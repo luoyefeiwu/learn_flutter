@@ -19,7 +19,7 @@ class _ViolationListState extends State<ViolationList> {
       child: Row(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0),
+            margin: EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0,bottom: 10),
             width: ScreenUtil().setWidth(900),
             height: ScreenUtil().setHeight(100),
             child: TextField(
@@ -65,11 +65,11 @@ class _ViolationListState extends State<ViolationList> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(3.0),
+        borderRadius: BorderRadius.circular(4.0),
       ),
-      //color: Colors.white,
+
       margin: EdgeInsets.all(8.0),
-      height: ScreenUtil().setHeight(200),
+      height: ScreenUtil().setHeight(250),
       child: Row(
         children: [
           Expanded(
@@ -85,7 +85,7 @@ class _ViolationListState extends State<ViolationList> {
                         alignment: Alignment.centerLeft,
                         child: GestureDetector(
                           child: Text("金棕护肤造型${index}"),
-                          onTap: (){
+                          onTap: () {
                             Navigator.pushNamed(context, "/violationInfo");
                           },
                         )),
@@ -108,17 +108,18 @@ class _ViolationListState extends State<ViolationList> {
               flex: 1,
               child: Container(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.phone),
+                        Icon(Icons.phone,size: ScreenUtil().setSp(45),color: Colors.blueAccent,),
                         Text("(010)1891149452${index}"),
                       ],
                     ),
                     Row(
                       children: [
                         Icon(
-                          Icons.surround_sound,
+                          Icons.volume_down,
                           color: Colors.redAccent,
                         ),
                         Text(
@@ -178,17 +179,19 @@ class _ViolationListState extends State<ViolationList> {
         ],
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: [
             _search(),
             Container(
               alignment: Alignment.centerLeft,
-              color: Colors.grey[100],
-              margin: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              color: Colors.white,
+              margin: EdgeInsets.only(left: 20, top: 10, bottom: 10,right: 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "单位未处理",
+                    "责任单位未处理",
                     style: TextStyle(fontSize: ScreenUtil().setSp(45)),
                   ),
                   Icon(Icons.arrow_downward),

@@ -190,9 +190,9 @@ class _violationInfoState extends State<ViolationInfo> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.phone,
+                    Icons.volume_down,
                     color: Colors.green,
-                    size: ScreenUtil().setSp(35),
+                    size: ScreenUtil().setSp(50),
                   ),
                   Text(
                     "点击提醒",
