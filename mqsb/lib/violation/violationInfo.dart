@@ -176,31 +176,69 @@ class _violationInfoState extends State<ViolationInfo> {
         child: Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              flex: 1,
-              child: Text("违规内容"),
+            Container(
+              margin: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              child: Text(
+                "违规内容",
+                style: TextStyle(fontSize: ScreenUtil().setSp(45)),
+              ),
             ),
-            Expanded()
-            Icon(Icons.label),
-            Text("点击提醒"),
+            Container(
+              margin: EdgeInsets.only(right: 20),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.phone,
+                    color: Colors.green,
+                    size: ScreenUtil().setSp(35),
+                  ),
+                  Text(
+                    "点击提醒",
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(35), color: Colors.green),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
         Container(
+            margin: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(color: Colors.white),
             child: Column(
-          children: [
-            Row(children: [
-              Text("违规描述"),
-              Text("店门口随意搬放物品"),
-            ]),
-            Row(
               children: [
-                Text("照片"),
-                Text("照片1"),
+                Row(
+                  children: [
+                    Text(
+                      "违规描述:",
+                      style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: Text(
+                        "店门口随意搬放物品",
+                        style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("违规照片:"),
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: Image.asset(
+                        "images/bj1.png",
+                        fit: BoxFit.cover,
+                        height: ScreenUtil().setHeight(200),
+                      ),
+                    )
+                  ],
+                )
               ],
-            )
-          ],
-        )),
+            )),
       ],
     ));
   }
@@ -250,12 +288,18 @@ class _violationInfoState extends State<ViolationInfo> {
                   children: [
                     Container(
                       width: ScreenUtil().setWidth(400),
+                      height: ScreenUtil().setHeight(150),
                       child: FlatButton(
                         color: Colors.blue,
                         highlightColor: Colors.blue,
                         colorBrightness: Brightness.dark,
                         splashColor: Colors.grey,
-                        child: Text("处理反馈"),
+                        child: Text(
+                          "处理反馈",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ScreenUtil().setSp(50)),
+                        ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                         onPressed: () {
@@ -286,12 +330,18 @@ class _violationInfoState extends State<ViolationInfo> {
                     ),
                     Container(
                       width: ScreenUtil().setWidth(450),
+                      height: ScreenUtil().setHeight(150),
                       child: FlatButton(
                         color: Colors.red,
                         highlightColor: Colors.redAccent,
                         colorBrightness: Brightness.dark,
                         splashColor: Colors.grey,
-                        child: Text("上报城管"),
+                        child: Text(
+                          "上报城管",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ScreenUtil().setSp(50)),
+                        ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                         onPressed: () {},
