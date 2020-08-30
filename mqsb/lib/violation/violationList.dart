@@ -65,13 +65,16 @@ class _ViolationListState extends State<ViolationList> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(5.0),
       ),
-
       margin: EdgeInsets.all(8.0),
       height: ScreenUtil().setHeight(250),
       child: Row(
         children: [
+          Container(
+            width: ScreenUtil().setWidth(10),
+            color: Colors.blue,
+          ),
           Expanded(
               flex: 1,
               child: Container(
