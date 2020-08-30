@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mqsb/schedule/schedule_info.dart';
 import 'package:mqsb/violation/violationInfo.dart';
 import 'package:mqsb/violation/violationList.dart';
 import 'company/company_detail.dart';
@@ -31,6 +32,7 @@ class App extends StatelessWidget {
             "/feedback": (BuildContext context) => FeedbackCase(),
             "/violationList": (BuildContext context) => ViolationList(),
             "/violationInfo": (BuildContext context) => ViolationInfo(),
+            "/scheduleInfo": (BuildContext context) => ScheduleInfo(),
           }),
     );
   }

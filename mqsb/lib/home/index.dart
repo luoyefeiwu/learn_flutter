@@ -89,13 +89,18 @@ class _IndexState extends State<Index> {
               Navigator.pushNamed(context, "/near", arguments: {"type": 2});
             },
           ),
-          _content(
-              Colors.lightBlueAccent,
-              Icon(
-                Icons.date_range,
-                color: Colors.white,
-              ),
-              "我的排版"),
+          GestureDetector(
+            child: _content(
+                Colors.lightBlueAccent,
+                Icon(
+                  Icons.date_range,
+                  color: Colors.white,
+                ),
+                "我的排班"),
+            onTap: () {
+              Navigator.pushNamed(context, "/scheduleInfo");
+            },
+          ),
         ],
       ),
     );
