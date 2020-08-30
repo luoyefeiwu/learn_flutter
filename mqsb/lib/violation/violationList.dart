@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:mqsb/model/company.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //违规列表
 class ViolationList extends StatefulWidget {
@@ -12,6 +13,15 @@ class _ViolationListState extends State<ViolationList> {
   List<Company> list = listCompany;
   TextEditingController _searchController = TextEditingController();
 
+  void _launchURL(String phone) async {
+    String url = 'tel:' + phone;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'url 不能进行访问，异常';
+    }
+  }
+
   //查询条件
   Widget _search() {
     return Container(
@@ -19,7 +29,8 @@ class _ViolationListState extends State<ViolationList> {
       child: Row(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0,bottom: 10),
+            margin:
+                EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0, bottom: 10),
             width: ScreenUtil().setWidth(900),
             height: ScreenUtil().setHeight(100),
             child: TextField(
@@ -98,9 +109,14 @@ class _ViolationListState extends State<ViolationList> {
                           Icons.book,
                           color: Colors.blueAccent,
                         ),
-                        Text(
-                          "处理反馈",
-                          style: TextStyle(color: Colors.blueAccent),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/feedback");
+                          },
+                          child: Text(
+                            "处理反馈",
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
                         ),
                       ],
                     ),
@@ -115,8 +131,17 @@ class _ViolationListState extends State<ViolationList> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.phone,size: ScreenUtil().setSp(45),color: Colors.blueAccent,),
-                        Text("(010)1891149452${index}"),
+                        Icon(
+                          Icons.phone,
+                          size: ScreenUtil().setSp(45),
+                          color: Colors.blueAccent,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _launchURL("(010)1891149452${index}");
+                          },
+                          child: Text("(010)1891149452${index}"),
+                        )
                       ],
                     ),
                     Row(
@@ -150,60 +175,28 @@ class _ViolationListState extends State<ViolationList> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),
-        title: Text("违规列表"),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          _search(),
+          Container(
+            alignment: Alignment.centerLeft,
+            color: Colors.white,
+            margin: EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
             child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.arrow_back_ios,
-                  size: ScreenUtil().setSp(40),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "责任单位未处理",
+                  style: TextStyle(fontSize: ScreenUtil().setSp(45)),
                 ),
-                Text("返回")
+                Icon(Icons.arrow_downward),
               ],
             ),
           ),
-        ),
-        actions: <Widget>[
-          Text(
-            "...",
-            style: TextStyle(
-              fontSize: ScreenUtil().setSp(80),
-            ),
-          )
+          Expanded(child: _violation())
         ],
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            _search(),
-            Container(
-              alignment: Alignment.centerLeft,
-              color: Colors.white,
-              margin: EdgeInsets.only(left: 20, top: 10, bottom: 10,right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "责任单位未处理",
-                    style: TextStyle(fontSize: ScreenUtil().setSp(45)),
-                  ),
-                  Icon(Icons.arrow_downward),
-                ],
-              ),
-            ),
-            Expanded(child: _violation())
-          ],
-        ),
       ),
     );
   }

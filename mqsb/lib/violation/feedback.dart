@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 //处理反馈
 class FeedbackCase extends StatefulWidget {
@@ -8,6 +14,20 @@ class FeedbackCase extends StatefulWidget {
 }
 
 class _FeedbackCaseState extends State<FeedbackCase> {
+  final cloudinary =
+      CloudinaryPublic('CLOUD_NAME', 'UPLOAD_PRESET', cache: false);
+  final _picker = ImagePicker();
+
+  Future<Widget> _upload() async {
+    PickedFile pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    File file = File(pickedFile.path);
+    CloudinaryResponse response = await cloudinary.uploadFile(
+      CloudinaryFile.fromFile(file, resourceType: CloudinaryResourceType.Image),
+    );
+
+    print(response.secureUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,23 +102,28 @@ class _FeedbackCaseState extends State<FeedbackCase> {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey, width: 1),
                         ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: ScreenUtil().setWidth(180),
-                              height: ScreenUtil().setHeight(100),
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                "+",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(100),
+                        child: GestureDetector(
+                          onTap: () {
+                            _upload();
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                width: ScreenUtil().setWidth(180),
+                                height: ScreenUtil().setHeight(100),
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                    fontSize: ScreenUtil().setSp(100),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              child: Text("上传附件"),
-                            ),
-                          ],
+                              Container(
+                                child: Text("上传附件"),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],
