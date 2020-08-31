@@ -9,11 +9,36 @@ class ScheduleInfo extends StatefulWidget {
 
 class _ScheduleInfoState extends State<ScheduleInfo> {
   int _currentIndex = 0;
+  List<String> listRoad = ["知春路", "海淀南路", "科学院南路", "中关村东路"];
 
   //日历
   Widget _calendar() {
     return Container(
-      child: MonthWidget(),
+      //height: ScreenUtil().setHeight(800),
+      child: MonthPageView(
+        padding: EdgeInsets.all(1),
+        scrollDirection: Axis.horizontal,
+        // 水平滑动或者竖直滑动
+        option: MonthOption(
+          enableContinuous: true, // 单选、连选控制
+//          marks: {
+//            DateDay.now().copyWith(day: 1): '111',
+//            DateDay.now().copyWith(day: 5): '222',
+//            DateDay.now().copyWith(day: 13): '333',
+//            DateDay.now().copyWith(day: 19): '444',
+//            DateDay.now().copyWith(day: 26): '444',
+//          },
+        ),
+        showWeekHead: true,
+        // 显示星期头部
+        onContinuousSelectListen: (firstDay, endFay) {},
+        // 连选回调
+        onMonthChange: (month) {},
+        // 月份更改回调
+        onDaySelected: (day, data) {},
+        // 日期选中会迪欧啊
+        onCreated: (controller) {}, // 控制器回调
+      ),
     );
   }
 
@@ -50,38 +75,57 @@ class _ScheduleInfoState extends State<ScheduleInfo> {
   Widget _contentLeft() {
     return Container(
       color: Colors.white,
-      //margin: EdgeInsets.only(left: 20),
-      padding: EdgeInsets.only(top: 10, bottom: 20, left: 10),
+      padding: EdgeInsets.only(bottom: 10, left: 10),
       alignment: Alignment.centerLeft,
       width: MediaQuery.of(context).size.width / 4,
-      child: Column(
-        children: [
-          Text(
-            "知春路",
-            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
-          ),
-          Text(
-            "海淀南路",
-            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
-          ),
-          Text(
-            "科学院南路",
-            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
-          ),
-          Text(
-            "中关村东路",
-            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
-          ),
-        ],
-      ),
+      height: ScreenUtil().setHeight(450),
+      child: _contentLeftListView(),
     );
   }
 
+  //左侧listview
+  Widget _contentLeftListView() {
+    return ListView.builder(
+        itemCount: listRoad.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              color: _currentIndex == index ? Colors.grey[100] : Colors.white,
+              child: Text(
+                listRoad[index],
+                style: TextStyle(fontSize: ScreenUtil().setSp(35)),
+              ),
+            ),
+          );
+        });
+  }
+
   //右侧
-  Widget _contentRight(int index) {
+  Widget _contentRight() {
     return Container(
-      child: Text("123"),
-    );
+        margin: EdgeInsets.only(top: 20),
+        width: (MediaQuery.of(context).size.width / 4) * 3,
+        height: ScreenUtil().setHeight(450),
+        child: ListView.builder(
+            itemCount: _currentIndex + 4,
+            itemBuilder: (context, index) {
+              return Container(
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("王婆大虾"),
+                      Text("10:10   "),
+                      Text("${index * _currentIndex}      "),
+                    ],
+                  ));
+            }));
   }
 
   @override
@@ -125,7 +169,7 @@ class _ScheduleInfoState extends State<ScheduleInfo> {
             Row(
               children: [
                 _contentLeft(),
-                _contentRight(_currentIndex),
+                _contentRight(),
               ],
             ),
           ],
