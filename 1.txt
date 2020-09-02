@@ -1,1 +1,6 @@
+
 我是 master 分支
+
+我是 newBranch 分支
+
+我是合并后的分支

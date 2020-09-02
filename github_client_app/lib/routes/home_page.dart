@@ -133,7 +133,7 @@ class MyDrawer extends StatelessWidget {
               title: Text(gm.language),
               onTap: () => Navigator.pushNamed(context, "language"),
             ),
-            if(userModel.isLogin) ListTile(
+            ListTile(
               leading: const Icon(Icons.power_settings_new),
               title: Text(gm.logout),
               onTap: () {
