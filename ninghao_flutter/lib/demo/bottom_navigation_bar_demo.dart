@@ -26,12 +26,12 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
         onTap: _onTaphandler,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.explore), title: Text("explore")),
+              icon: Icon(Icons.explore), label: 'explore'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.history), title: Text("history")),
-          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("list")),
+              icon: Icon(Icons.history), label: 'history'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'list'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text("person")),
+              icon: Icon(Icons.person), label: 'person'),
         ]);
   }
 }

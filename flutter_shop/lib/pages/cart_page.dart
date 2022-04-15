@@ -23,7 +23,7 @@ class Number extends StatelessWidget {
           builder: (context, child, counter) {
             return Text(
               '${counter.value}',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme.of(context).textTheme.bodyLarge,
             );
           },
         ));

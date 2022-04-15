@@ -29,11 +29,9 @@ class _MyPageState extends State<MyPage> {
         //选项卡背景色
         backgroundColor: CupertinoColors.lightBackgroundGray,
         items: [
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.home), label: "主页"),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.home), title: Text("主页")),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.conversation_bubble),
-              title: Text("聊天")),
+              icon: Icon(CupertinoIcons.conversation_bubble), label: "聊天"),
         ],
       ),
       tabBuilder: (context, index) {

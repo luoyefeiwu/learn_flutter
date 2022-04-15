@@ -136,7 +136,7 @@ class AppState extends State<App> {
         items: [
           //导航按钮项传入文本及图标
           new BottomNavigationBarItem(
-              title: new Text(
+              activeIcon: new Text(
                 '聊天',
                 style: TextStyle(
                     color: _currentIndex == 0
@@ -156,7 +156,7 @@ class AppState extends State<App> {
                 height: 28.0,
               )),
           new BottomNavigationBarItem(
-              title: new Text(
+              activeIcon: new Text(
                 '好友',
                 style: TextStyle(
                     color: _currentIndex == 1
@@ -175,7 +175,7 @@ class AppState extends State<App> {
                 height: 28.0,
               )),
           new BottomNavigationBarItem(
-              title: new Text(
+              activeIcon: new Text(
                 '我的',
                 style: TextStyle(
                     color: _currentIndex == 2

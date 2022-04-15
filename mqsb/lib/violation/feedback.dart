@@ -31,7 +31,7 @@ class _FeedbackCaseState extends State<FeedbackCase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),

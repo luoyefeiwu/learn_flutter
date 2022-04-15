@@ -76,7 +76,7 @@ class _ViolationListState extends State<ViolationList> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       margin: EdgeInsets.all(8.0),
       height: ScreenUtil().setHeight(250),
@@ -84,7 +84,11 @@ class _ViolationListState extends State<ViolationList> {
         children: [
           Container(
             width: ScreenUtil().setWidth(10),
-            color: Colors.blue,
+           // color: Colors.blue,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
           ),
           Expanded(
               flex: 1,
@@ -98,7 +102,7 @@ class _ViolationListState extends State<ViolationList> {
                     Align(
                         alignment: Alignment.centerLeft,
                         child: GestureDetector(
-                          child: Text("金棕护肤造型${index}"),
+                          child: Text("责任单位-演示 ${index}",style: TextStyle(fontSize: 18),),
                           onTap: () {
                             Navigator.pushNamed(context, "/violationInfo");
                           },
@@ -106,8 +110,9 @@ class _ViolationListState extends State<ViolationList> {
                     Row(
                       children: [
                         Icon(
-                          Icons.book,
+                          Icons.edit,
                           color: Colors.blueAccent,
+                          size: 18,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -115,7 +120,7 @@ class _ViolationListState extends State<ViolationList> {
                           },
                           child: Text(
                             "处理反馈",
-                            style: TextStyle(color: Colors.blueAccent),
+                            style: TextStyle(color: Colors.blueAccent,fontSize: 18),
                           ),
                         ),
                       ],
@@ -191,7 +196,7 @@ class _ViolationListState extends State<ViolationList> {
                   "责任单位未处理",
                   style: TextStyle(fontSize: ScreenUtil().setSp(45)),
                 ),
-                Icon(Icons.arrow_downward),
+                Icon(Icons.keyboard_arrow_down,size: 30,),
               ],
             ),
           ),

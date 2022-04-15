@@ -118,7 +118,7 @@ class _ScheduleInfoState extends State<ScheduleInfo> {
               return Container(
                   padding: EdgeInsets.all(8),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("王婆大虾"),
                       Text("10:10   "),
@@ -131,7 +131,7 @@ class _ScheduleInfoState extends State<ScheduleInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color.fromRGBO(67, 120, 188, 1.0),

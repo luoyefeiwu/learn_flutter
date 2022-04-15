@@ -18,9 +18,12 @@ class App extends StatelessWidget {
     //ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     // ScreenUtil.init(context);
     // TODO: implement build
+
+    int number = int.parse("1223");
+
     return Container(
       child: MaterialApp(
-          title: 'Demo',
+          title: 'mqsb',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(primaryColor: Colors.blue),
           home: Login(),

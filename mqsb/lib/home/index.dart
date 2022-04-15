@@ -117,7 +117,7 @@ class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("首页"),
         centerTitle: true,
@@ -134,13 +134,13 @@ class _IndexState extends State<Index> {
                   Icons.home,
                   size: ScreenUtil().setSp(70),
                 ),
-                title: Text("工作面板")),
+                label: '工作面板'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.account_box,
                   size: ScreenUtil().setSp(70),
                 ),
-                title: Text("违规管理")),
+                label: '违规管理'),
           ]),
       body: _body(),
     );
