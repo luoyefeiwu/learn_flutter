@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
             child: TextField(
               controller: _loginNameController,
               decoration: InputDecoration(
-                hintText: "用户名",
+                hintText: "手机号",
                 hintStyle: TextStyle(
                   fontSize: 20,
                 ),

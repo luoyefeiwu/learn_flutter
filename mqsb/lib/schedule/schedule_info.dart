@@ -35,7 +35,7 @@ class _ScheduleInfoState extends State<ScheduleInfo> {
         // 连选回调
         onMonthChange: (month) {},
         // 月份更改回调
-        onDaySelected: (day, data) {},
+       // onDaySelected: (day, data) {},
         // 日期选中会迪欧啊
         onCreated: (controller) {}, // 控制器回调
       ),

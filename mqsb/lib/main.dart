@@ -19,7 +19,6 @@ class App extends StatelessWidget {
     // ScreenUtil.init(context);
     // TODO: implement build
 
-    int number = int.parse("1223");
 
     return Container(
       child: MaterialApp(
