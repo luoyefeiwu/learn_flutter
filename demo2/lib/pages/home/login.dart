@@ -33,17 +33,25 @@ class _LoginState extends State<Login> {
                   style: new TextStyle(color: Colors.black, fontSize: 25)),
             ),
             Container(
-             // margin: EdgeInsets.only(top: 30, left: 30, right: 30),
+              // margin: EdgeInsets.only(top: 30, left: 30, right: 30),
               height: 200,
-              padding:EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               color: Colors.black12,
               child: Column(
                 children: [
                   Container(
+                    padding: EdgeInsets.all(0),
                     child: TextField(
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "请输入用户名",
+                          prefixIcon: Container(
+                              width: 10,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.star, color: Colors.red, size: 10),
+                                  Text("账号")
+                                ],
+                              )),
                           filled: true,
                           fillColor: Colors.white),
                     ),
@@ -51,14 +59,42 @@ class _LoginState extends State<Login> {
                   Container(
                     margin: EdgeInsets.only(top: 20),
                     child: TextField(
+                      obscureText: true,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "密码",
+                          prefixIcon: Container(
+                            width: 10,
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.red, size: 10),
+                                Text("密码")
+                              ],
+                            ),
+                          ),
+                          suffixIcon: Icon(Icons.remove_red_eye),
                           filled: true,
                           fillColor: Colors.white),
                     ),
                   )
                 ],
+              ),
+            ),
+            Container(
+              child: Row(
+                children: [
+                  Radio(value: 1, groupValue: 1, onChanged: (e) => {}),
+                  Text("请阅读并勾选隐私条款")
+                ],
+              ),
+            ),
+            Container(
+              child: MaterialButton(
+                onPressed: () {},
+                child: Text("登录"),
+                color: Colors.black26,
+                textColor: Colors.white,
+                minWidth: double.infinity,
+                height: 50,
               ),
             )
           ],
