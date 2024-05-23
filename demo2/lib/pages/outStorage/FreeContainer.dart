@@ -38,39 +38,29 @@ class _FreeContainerState extends State<FreeContainer> {
             ),
             Container(
               margin: const EdgeInsets.only(top: 30),
-              child: const Text("欢迎登录鼎腾WMS",
+              child: const Text("释放容器/任务",
                   style: TextStyle(color: Colors.black, fontSize: 25)),
             ),
             Container(
               // margin: EdgeInsets.only(top: 30, left: 30, right: 30),
               height: 200,
               padding: const EdgeInsets.all(20),
-              color: Colors.black12,
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(0),
-                    child: TextField(
-                      controller: _loginNameController,
-                      // decoration: InputDecoration(
-                      //     border: const OutlineInputBorder(),
-                      //     prefixIcon: Container(
-                      //         // width: 10,
-                      //         child: const Row(
-                      //           children: [
-                      //             Icon(Icons.star, color: Colors.red, size: 10),
-                      //             Text("容器/任务号")
-                      //           ],
-                      //         )),
-                      //     filled: true,
-                      //     fillColor: Colors.white),
-                    ),
-                  ),
+                      padding: const EdgeInsets.all(0),
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _loginNameController,
+                          )
+                        ],
+                      )),
                   Container(
                     margin: EdgeInsets.only(top: 20),
                     child: TextField(
                       controller: _passWorldController,
-                      obscureText: true,
+                      //  obscureText: true,
                       // decoration: InputDecoration(
                       //     border: OutlineInputBorder(),
                       //     prefixIcon: Container(
@@ -94,22 +84,41 @@ class _FreeContainerState extends State<FreeContainer> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: MaterialButton(
                 onPressed: () async {
-                  String username = _loginNameController.value.text;
-                  String pwd = _passWorldController.value.text;
-                  var data = {"name": username, "pwd": pwd};
-                  var response = await HttpUtils.post(
-                      servicePath["login"].toString(),
-                      data: data);
-                  if (response['code'] == 200) {
-                    String token = response['data'];
-                    // 存储token
-                    await saveToken(token);
-                    //跳转至搜索页面
-                    Navigator.pushNamed(context, 'index');
+                  String no = _loginNameController.value.text;
+                  String warehouseCode = _passWorldController.value.text;
+
+                  Map<String, dynamic>? params = {
+                    'no': no,
+                    'warehouseCode': warehouseCode
+                  };
+                  var response = await HttpUtils.get(
+                      servicePath["freeContainer"].toString(),
+                      params: params);
+                  String msg = "操作成功!";
+                  if (response['code'] != 200) {
+                    msg = response['msg'];
                   }
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title:  Text("提示"),
+                          content:  Text(msg),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () =>
+                                    {Navigator.of(context).pop(true)},
+                                child: const Text("确认")),
+                            TextButton(
+                                onPressed: () =>
+                                    {Navigator.of(context).pop(true)},
+                                child: const Text("取消"))
+                          ],
+                        );
+                      });
                 },
-                child: Text("登录"),
-                color: Color.fromRGBO(231, 231, 231, 0),
+                child: Text("确定"),
+                color: Colors.blue,
                 textColor: Colors.white,
                 minWidth: double.infinity,
                 height: 50,

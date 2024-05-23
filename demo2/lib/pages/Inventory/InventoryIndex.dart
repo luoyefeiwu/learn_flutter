@@ -43,7 +43,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                             ),
                           ),
                           Container(
-                            child: Text("收货"),
+                            child: Text("查库存"),
                           )
                         ],
                       ),
@@ -70,7 +70,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                     },
                   );
                 },
-                itemCount: 6,
+                itemCount: 1,
                 shrinkWrap: true,
               ),
             )

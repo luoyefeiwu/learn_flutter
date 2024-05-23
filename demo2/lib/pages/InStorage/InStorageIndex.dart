@@ -69,7 +69,7 @@ class _IndexState extends State<InStorageIndex> {
                     },
                   );
                 },
-                itemCount: 3,
+                itemCount: 1,
                 shrinkWrap: true,
               ),
             )

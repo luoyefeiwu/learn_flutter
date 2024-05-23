@@ -18,26 +18,25 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool _checkboxAutomaticSelected = false; //是否勾选
-  final TextEditingController _loginNameController = TextEditingController();
+  final TextEditingController _loginNameController = TextEditingController(text: 'HuangChuanWang');
   final TextEditingController _passWorldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Center(child: Text(widget.title)),
-      ),
+      // appBar: AppBar(
+      //   title: Center(child: Text(widget.title)),
+      // ),
       body: Center(
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 30),
               child: Image.asset(
                 R.assetsImagesHomeIndex,
                 fit: BoxFit.cover,
               ),
+              padding: EdgeInsets.only(top: 200),
             ),
             Container(
               margin: const EdgeInsets.only(top: 30),
@@ -48,7 +47,7 @@ class _LoginState extends State<Login> {
               // margin: EdgeInsets.only(top: 30, left: 30, right: 30),
               height: 200,
               padding: const EdgeInsets.all(20),
-              color: Colors.black12,
+              //color: Colors.black12,
               child: Column(
                 children: [
                   Container(
@@ -66,7 +65,8 @@ class _LoginState extends State<Login> {
                                 ],
                               )),
                           filled: true,
-                          fillColor: Colors.white),
+                          fillColor: Colors.white
+                      ),
                     ),
                   ),
                   Container(
@@ -94,29 +94,6 @@ class _LoginState extends State<Login> {
               ),
             ),
             Container(
-              child: Row(
-                children: [
-                  Checkbox(
-                      shape: CircleBorder(),
-                      value: _checkboxAutomaticSelected,
-                      onChanged: (bool? result) {
-                        setState(() {
-                          _checkboxAutomaticSelected = result!;
-                        });
-                      }),
-                  Row(
-                    children: [
-                      Text("请阅读并勾选"),
-                      Text(
-                        "隐私条款",
-                        style: new TextStyle(color: Colors.blue),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Container(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: MaterialButton(
                 onPressed: () async {
@@ -127,15 +104,17 @@ class _LoginState extends State<Login> {
                       servicePath["login"].toString(),
                       data: data);
                   if (response['code'] == 200) {
-                      String token = response['data'];
-                      // 存储token
-                      await saveToken(token);
-                      //跳转至搜索页面
-                      Navigator.pushNamed(context, '/index');
+                    String token = response['data'];
+                    // 存储token
+                    await saveToken(token);
+                    //跳转至搜索页面
+                    Navigator.pushNamed(context, '/index');
+                  } else {
+                    _showDialog(context,  response['msg']);
                   }
                 },
                 child: Text("登录"),
-                color: Color.fromRGBO(231, 231, 231, 0),
+                color: Colors.blue,
                 textColor: Colors.white,
                 minWidth: double.infinity,
                 height: 50,
@@ -145,5 +124,26 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void _showDialog(BuildContext context,String msg) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("提示"),
+            content: Text(msg),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () =>
+                  {Navigator.of(context).pop(true)},
+                  child: const Text("确认")),
+              TextButton(
+                  onPressed: () =>
+                  {Navigator.of(context).pop(true)},
+                  child: const Text("取消"))
+            ],
+          );
+        });
   }
 }

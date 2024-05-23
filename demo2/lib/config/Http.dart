@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../common/Token.dart';
+
 //https://juejin.cn/post/7020451065371820062
 class Http {
   static final Http _instance = Http._internal();
@@ -78,16 +80,14 @@ class Http {
 
   // 添加认证
   // 读取本地配置
-  Map<String, dynamic>? getAuthorizationHeader() {
-    Map<String, dynamic>? headers = {'appcode': 'new_wms_app'};
-    // 从getx或者sputils中获取
-    // String accessToken = Global.accessToken;
-    // String accessToken = "";
-    // if (accessToken != null) {
-    //   headers.addAll({
-    //     'dt_session': '$accessToken',
-    //   });
-    // }
+  Future<Map<String, dynamic>?> getAuthorizationHeader() async{
+    Map<String, dynamic>? headers =  {'appcode': 'new_wms_app'};
+    String token = await getToken();
+    if(token!=null){
+        headers.addAll({
+          'dt_sessionId': token
+        });
+    }
     return headers;
   }
 
@@ -110,7 +110,7 @@ class Http {
         "cacheDisk": cacheDisk,
       },
     );
-    Map<String, dynamic>? _authorization = getAuthorizationHeader();
+    Map<String, dynamic>? _authorization =await getAuthorizationHeader();
     if (_authorization != null) {
       requestOptions = requestOptions.copyWith(headers: _authorization);
     }
@@ -133,7 +133,7 @@ class Http {
     CancelToken? cancelToken,
   }) async {
     Options requestOptions = options ?? Options();
-    Map<String, dynamic>? _authorization = getAuthorizationHeader();
+    Map<String, dynamic>? _authorization =await getAuthorizationHeader();
     if (_authorization != null) {
       requestOptions = requestOptions.copyWith(headers: _authorization);
     }
@@ -156,7 +156,7 @@ class Http {
   }) async {
     Options requestOptions = options ?? Options();
 
-    Map<String, dynamic>? _authorization = getAuthorizationHeader();
+    Map<String, dynamic>? _authorization =await getAuthorizationHeader();
     if (_authorization != null) {
       requestOptions = requestOptions.copyWith(headers: _authorization);
     }
@@ -178,7 +178,7 @@ class Http {
     CancelToken? cancelToken,
   }) async {
     Options requestOptions = options ?? Options();
-    Map<String, dynamic>? _authorization = getAuthorizationHeader();
+    Map<String, dynamic>? _authorization =await getAuthorizationHeader();
     if (_authorization != null) {
       requestOptions = requestOptions.copyWith(headers: _authorization);
     }
@@ -201,7 +201,7 @@ class Http {
   }) async {
     Options requestOptions = options ?? Options();
 
-    Map<String, dynamic>? _authorization = getAuthorizationHeader();
+    Map<String, dynamic>? _authorization =await getAuthorizationHeader();
     if (_authorization != null) {
       requestOptions = requestOptions.copyWith(headers: _authorization);
     }

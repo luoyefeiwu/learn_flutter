@@ -10,8 +10,10 @@ class OutStorageIndex extends StatefulWidget {
 }
 
 class _OutStorageIndexState extends State<OutStorageIndex> {
-  final TextEditingController _loginNameController = TextEditingController();
-  final TextEditingController _passWorldController = TextEditingController();
+  List _list = [
+    {'title': '释放容器', 'routeName': '/free'},
+    {'title': '退出登录', 'routeName': '/login'}
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,28 +37,27 @@ class _OutStorageIndexState extends State<OutStorageIndex> {
                     mainAxisSpacing: 1.0),
                 itemBuilder: (BuildContext context, int i) {
                   return InkWell(
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Image.asset(
-                              R.assetsImagesReceiveGoods,
-                              fit: BoxFit.fill,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Image.asset(
+                                R.assetsImagesReceiveGoods,
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: Text("释放容器"),
-                          )
-                        ],
+                            Container(
+                              child: Text(_list[i]['title']),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/free');
-                    }
-                  );
+                      onTap: () {
+                        Navigator.pushNamed(context, _list[i]['routeName']);
+                      });
                 },
-                itemCount: 1,
+                itemCount: _list.length,
                 shrinkWrap: true,
               ),
             )
