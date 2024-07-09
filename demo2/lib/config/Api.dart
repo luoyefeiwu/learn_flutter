@@ -1,7 +1,11 @@
-//const serviceUrl = 'https://sitapi.dingteng.tech/';
-const serviceUrl='https://dtapi.delight.tech/';
+const serviceUrl = 'https://192.168.91.202';
 const servicePath = {
-  'login': 'ssoApi/app/doLogin', // 登录
-  'freeContainer': 'dtwmsApi/container/freeContainer', // 释放容器
-  'myMenu': 'operationApi/perm/query/myMenu', // 获取菜单
+  // 登录
+  'login': '/ssoApi/app/doLogin',
+  // 释放容器
+  'freeContainer': '/dtwmsApi/container/freeContainer',
+  //获取仓库
+  'listWarehouseByUser': '/dtwmsApi/warehouseManagement/listWarehouseByUser',
+  // 获取菜单
+  'myMenu': '/operationApi/perm/query/myMenu',
 };

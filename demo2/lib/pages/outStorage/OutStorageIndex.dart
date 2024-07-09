@@ -12,7 +12,17 @@ class OutStorageIndex extends StatefulWidget {
 class _OutStorageIndexState extends State<OutStorageIndex> {
   List _list = [
     {'title': '释放容器', 'routeName': '/free'},
-    {'title': '退出登录', 'routeName': '/login'}
+    {'title': '退出登录', 'routeName': '/login'},
+    {'title': '拣货', 'routeName': '/free'},
+    {'title': '绑定集货容器', 'routeName': '/free'},
+    {'title': '集货大屏', 'routeName': '/free'},
+    {'title': '打包', 'routeName': '/free'},
+    {'title': '出库', 'routeName': '/free'},
+    {'title': '还货', 'routeName': '/free'},
+    {'title': '包裹分拣', 'routeName': '/free'},
+    {'title': '合包', 'routeName': '/free'},
+    {'title': '创建波次', 'routeName': '/free'},
+    {'title': '更改物流', 'routeName': '/free'},
   ];
 
   @override

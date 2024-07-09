@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 
 import '../common/Token.dart';
 
-//https://juejin.cn/post/7020451065371820062
 class Http {
   static final Http _instance = Http._internal();
 

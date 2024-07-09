@@ -1,5 +1,6 @@
 import 'package:demo2/model/MyMenu.dart';
 import 'package:demo2/pages/InStorage/InStorageIndex.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/Api.dart';
@@ -22,10 +23,11 @@ class _IndexState extends State<Index> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: SingleChildScrollView(
-        child: getBackage(context),
+        child: _child(context),
       )),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this._currentIndex,
@@ -48,18 +50,34 @@ class _IndexState extends State<Index> {
     );
   }
 
-  Widget getBackage(BuildContext context) {
+  Widget _child(BuildContext context) {
+    Widget? result = null;
+    switch (_currentIndex) {
+      case 0:
+      case 1:
+        result = getApplication(context);
+        break;
+      case 2:
+        result = getMy(context);
+        break;
+    }
+    return result!;
+  }
+
+  Widget getMy(BuildContext context) {
+    return Container();
+  }
+
+  Widget getApplication(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height -80,
-        padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(240, 240, 240, 0),
-        ),
+        height: MediaQuery.of(context).size.height,
+        padding: const EdgeInsets.all(5),
+        decoration: const BoxDecoration(color: Colors.black12),
         child: const Column(
           children: [
             InStorageIndex(),
             InventoryIndex(),
-            Expanded(child: OutStorageIndex()),
+            OutStorageIndex(),
           ],
         ));
   }

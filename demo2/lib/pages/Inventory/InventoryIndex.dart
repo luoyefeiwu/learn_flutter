@@ -10,6 +10,17 @@ class InventoryIndex extends StatefulWidget {
 }
 
 class _InventoryIndexState extends State<InventoryIndex> {
+
+  List _list = [
+    {'title': '上架', 'routeName': '/index'},
+    {'title': '移位', 'routeName': '/index'},
+    {'title': '盘点', 'routeName': '/index'},
+    {'title': '查库存', 'routeName': '/index'},
+    {'title': '库存异常', 'routeName': '/index'},
+    {'title': '扫码打标', 'routeName': '/index'},
+    {'title': '更换物流包裹', 'routeName': '/index'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +54,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                             ),
                           ),
                           Container(
-                            child: Text("查库存"),
+                            child: Text(_list[i]['title']),
                           )
                         ],
                       ),
@@ -54,7 +65,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                           builder: (context) {
                             return AlertDialog(
                               title: const Text("提示"),
-                              content: const Text("你点击了收货"),
+                              content:  Text("你点击了"+_list[i]['title']),
                               actions: <Widget>[
                                 TextButton(
                                     onPressed: () =>
@@ -70,7 +81,7 @@ class _InventoryIndexState extends State<InventoryIndex> {
                     },
                   );
                 },
-                itemCount: 1,
+                itemCount: _list.length,
                 shrinkWrap: true,
               ),
             )

@@ -1,4 +1,5 @@
 import 'package:demo2/pages/home/Index.dart';
+import 'package:demo2/pages/home/Warehouses.dart';
 import 'package:demo2/pages/outStorage/FreeContainer.dart';
 import 'package:flutter/material.dart';
 
@@ -22,13 +23,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'wms',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.white),
+        theme: ThemeData(primarySwatch:Colors.blue ),
         home: Login(title: "dtwms"),
         //home: Index(),
         routes: <String, WidgetBuilder>{
           "/login": (BuildContext context) => Login(title: "dtwms"),
           "/index": (BuildContext context) => Index(title: "dtwms"),
-          "/free": (BuildContext context) => FreeContainer(title: "dtwms")
+          "/free": (BuildContext context) => FreeContainer(title: "dtwms"),
+          "/warehouses": (BuildContext context) => Warehouses(title: "dtwms"),
         });
   }
 }

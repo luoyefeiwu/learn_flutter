@@ -6,6 +6,16 @@ Future<void> saveToken(String token) async {
   await prefs.setString('token', token);
 }
 
+Future<void> saveWarehouseCode(String warehouseCode) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('warehouseCode', warehouseCode);
+}
+
+Future<String> getWarehouseCode() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('warehouseCode') ?? '';
+}
+
 // 读取token
 Future<String> getToken() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

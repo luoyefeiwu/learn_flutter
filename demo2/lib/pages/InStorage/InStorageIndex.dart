@@ -9,6 +9,13 @@ class InStorageIndex extends StatefulWidget {
 }
 
 class _IndexState extends State<InStorageIndex> {
+  List _list = [
+    {'title': '收货', 'routeName': '/index'},
+    {'title': '质检', 'routeName': '/index'},
+    {'title': '退货初检', 'routeName': '/index'},
+    {'title': '待检判定', 'routeName': '/index'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +49,7 @@ class _IndexState extends State<InStorageIndex> {
                             ),
                           ),
                           Container(
-                            child: Text("收货"),
+                            child: Text(_list[i]['title']),
                           )
                         ],
                       ),
@@ -53,15 +60,15 @@ class _IndexState extends State<InStorageIndex> {
                           builder: (context) {
                             return AlertDialog(
                               title: const Text("提示"),
-                              content: const Text("你点击了收货"),
+                              content: Text("你点击了"+_list[i]['title']),
                               actions: <Widget>[
                                 TextButton(
                                     onPressed: () =>
-                                    {Navigator.of(context).pop(true)},
+                                        {Navigator.of(context).pop(true)},
                                     child: const Text("确认")),
                                 TextButton(
                                     onPressed: () =>
-                                    {Navigator.of(context).pop(true)},
+                                        {Navigator.of(context).pop(true)},
                                     child: const Text("取消"))
                               ],
                             );
@@ -69,7 +76,7 @@ class _IndexState extends State<InStorageIndex> {
                     },
                   );
                 },
-                itemCount: 1,
+                itemCount: _list.length,
                 shrinkWrap: true,
               ),
             )
@@ -77,4 +84,3 @@ class _IndexState extends State<InStorageIndex> {
         ));
   }
 }
-
