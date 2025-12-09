@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hook_up/pages/home/info/Info.dart';
 import 'package:hook_up/pages/room_detail/data.dart';
 import 'package:hook_up/widget/common_swipper.dart';
 import 'package:hook_up/widget/common_tags.dart';
 import 'package:hook_up/widget/common_title.dart';
+import 'package:hook_up/widget/room_appliance.dart' show RoomApplicanceList;
 import 'package:share_plus/share_plus.dart';
 
 var bottomButtonTextStyle = TextStyle(fontSize: 20.0, color: Colors.white);
@@ -20,6 +22,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   late RoomDetailData data;
 
   bool isLike = false;
+  bool showAllText = false;
+
+  //bool isLike = false;
 
   @override
   void initState() {
@@ -30,6 +35,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   @override
   Widget build(BuildContext context) {
     if (null == data) return Container();
+    bool showTextTool = data.subTitle.length > 100;
     return Scaffold(
       appBar: AppBar(
         title: Text(data.title),
@@ -75,9 +81,61 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                 ),
               ),
               Divider(color: Colors.grey, indent: 10.0, endIndent: 10.0),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, top: 6.0, bottom: 6.0),
+                child: Wrap(
+                  runSpacing: 20.0,
+                  children: [
+                    BaseInfoItem(content: '面积：${data.size} 平米'),
+                    BaseInfoItem(content: '楼层：${data.floor}'),
+                    BaseInfoItem(content: '房型：${data.roomType}'),
+                    BaseInfoItem(content: '装修：精装'),
+                  ],
+                ),
+              ),
               CommonTitle(title: '房屋配置'),
+              RoomApplicanceList(list: data.applicances),
               CommonTitle(title: '房屋概况'),
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.subTitle ?? '暂无房屋概况',
+                      maxLines: showAllText ? null : 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        showTextTool
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showAllText = !showAllText;
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(showAllText ? '收起' : '展开'),
+                                    Icon(
+                                      showAllText
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        Text('举报'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               CommonTitle(title: '猜你喜欢'),
+              Info(),
+              Container(height: 100.0),
             ],
           ),
           Positioned(
@@ -157,6 +215,20 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BaseInfoItem extends StatelessWidget {
+  final String content;
+
+  const BaseInfoItem({super.key, required this.content});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: (MediaQuery.of(context).size.width - 3 * 10.0) / 2,
+      child: Text(content, style: TextStyle(fontSize: 16.0)),
     );
   }
 }

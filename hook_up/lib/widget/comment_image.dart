@@ -20,6 +20,7 @@ class CommentImage extends StatelessWidget {
         width: width,
         height: height,
         child: CachedNetworkImage(
+          fit: BoxFit.fill,
           imageUrl: imageUri,
           placeholder: (context, url) =>
               const CircularProgressIndicator(), // 加载时的占位符

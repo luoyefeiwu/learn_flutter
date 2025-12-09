@@ -150,7 +150,7 @@ class _SearchBarState extends State<SearchBar> {
           ),
         if (widget.showMap)
           Icon(
-            Icons.location_disabled_outlined,
+            Icons.map_outlined,
             color: Colors.black,
             size: 20,
           ),
