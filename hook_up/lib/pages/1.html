@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下拉多选组件</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .multi-select {
+            position: relative;
+            width: 100%;
+        }
+        
+        .select-box {
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: pointer;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .select-box:hover {
+            border-color: #3498db;
+        }
+        
+        .select-box.open {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .placeholder {
+            color: #95a5a6;
+        }
+        
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .arrow.open {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dropdown.open {
+            max-height: 300px;
+            border-color: #3498db;
+        }
+        
+        .search-box {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e8ed;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #3498db;
+        }
+        
+        .options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        
+        .option:hover {
+            background: #f8f9fa;
+        }
+        
+        .option.selected {
+            background: #e3f2fd;
+        }
+        
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #bdc3c7;
+            border-radius: 3px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .checkbox.checked {
+            background: #3498db;
+            border-color: #3498db;
+        }
+        
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .selected-item {
+            background: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .remove-btn {
+            margin-left: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .confirm-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .confirm-btn:hover {
+            background: #27ae60;
+        }
+        
+        .reset-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+        
+        .no-results {
+            padding: 15px;
+            text-align: center;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>下拉多选组件</h1>
+        <p class="description">选择一个或多个选项，支持搜索过滤功能。已选择的选项会显示在下拉框下方。</p>
+        
+        <div class="multi-select">
+            <div class="select-box">
+                <span class="placeholder">请选择...</span>
+                <span class="arrow">▼</span>
+            </div>
+            
+            <div class="dropdown">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索选项...">
+                </div>
+                <div class="options">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="selected-items">
+            <!-- 已选项将在这里显示 -->
+        </div>
+        
+        <div class="actions">
+            <button class="reset-btn">重置选择</button>
+            <button class="confirm-btn">确认选择</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 示例数据
+            const optionsData = [
+                { id: 1, text: '前端开发' },
+                { id: 2, text: '后端开发' },
+                { id: 3, text: '移动开发' },
+                { id: 4, text: 'UI/UX设计' },
+                { id: 5, text: '产品经理' },
+                { id: 6, text: '数据科学' },
+                { id: 7, text: '人工智能' },
+                { id: 8, text: 'DevOps' },
+                { id: 9, text: '测试工程师' },
+                { id: 10, text: '网络安全' }
+            ];
+            
+            const multiSelect = document.querySelector('.multi-select');
+            const selectBox = multiSelect.querySelector('.select-box');
+            const dropdown = multiSelect.querySelector('.dropdown');
+            const optionsContainer = multiSelect.querySelector('.options');
+            const searchInput = multiSelect.querySelector('input');
+            const selectedItemsContainer = document.querySelector('.selected-items');
+            const placeholder = multiSelect.querySelector('.placeholder');
+            const arrow = multiSelect.querySelector('.arrow');
+            const resetBtn = document.querySelector('.reset-btn');
+            const confirmBtn = document.querySelector('.confirm-btn');
+            
+            let selectedOptions = [];
+            
+            // 初始化选项
+            function initOptions() {
+                optionsContainer.innerHTML = '';
+                
+                optionsData.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.dataset.id = option.id;
+                    
+                    const checkbox = document.createElement('div');
+                    checkbox.className = 'checkbox';
+                    
+                    const text = document.createElement('span');
+                    text.textContent = option.text;
+                    
+                    optionElement.appendChild(checkbox);
+                    optionElement.appendChild(text);
+                    
+                    // 点击选项切换选中状态
+                    optionElement.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        toggleOption(option.id);
+                    });
+                    
+                    optionsContainer.appendChild(optionElement);
+                });
+            }
+            
+            // 切换选项选中状态
+            function toggleOption(id) {
+                const index = selectedOptions.indexOf(id);
+                
+                if (index === -1) {
+                    // 选中选项
+                    selectedOptions.push(id);
+                } else {
+                    // 取消选中
+                    selectedOptions.splice(index, 1);
+                }
+                
+                updateUI();
+            }
+            
+            // 更新UI显示
+            function updateUI() {
+                // 更新选项的选中状态
+                const allOptions = optionsContainer.querySelectorAll('.option');
+                allOptions.forEach(option => {
+                    const checkbox = option.querySelector('.checkbox');
+                    const id = parseInt(option.dataset.id);
+                    
+                    if (selectedOptions.includes(id)) {
+                        option.classList.add('selected');
+                        checkbox.classList.add('checked');
+                    } else {
+                        option.classList.remove('selected');
+                        checkbox.classList.remove('checked');
+                    }
+                });
+                
+                // 更新已选项显示
+                selectedItemsContainer.innerHTML = '';
+                
+                if (selectedOptions.length > 0) {
+                    placeholder.textContent = `已选择 ${selectedOptions.length} 个选项`;
+                    
+                    selectedOptions.forEach(id => {
+                        const option = optionsData.find(o => o.id === id);
+                        if (option) {
+                            const selectedItem = document.createElement('div');
+                            selectedItem.className = 'selected-item';
+                            selectedItem.innerHTML = `
+                                ${option.text}
+                                <span class="remove-btn" data-id="${id}">×</span>
+                            `;
+                            selectedItemsContainer.appendChild(selectedItem);
+                        }
+                    });
+                    
+                    // 添加移除按钮事件
+                    selectedItemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const id = parseInt(this.dataset.id);
+                            removeOption(id);
+                        });
+                    });
+                } else {
+                    placeholder.textContent = '请选择...';
+                }
+            }
+            
+            // 移除选项
+            function removeOption(id) {
+                const index = selectedOptions.indexOf(id);
+                if (index !== -1) {
+                    selectedOptions.splice(index, 1);
+                    updateUI();
+                }
+            }
+            
+            // 搜索过滤
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const allOptions = optionsContainer.querySelectorAll('.option');
+                
+                let hasVisibleOptions = false;
+                
+                allOptions.forEach(option => {
+                    const text = option.querySelector('span').textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        option.style.display = 'flex';
+                        hasVisibleOptions = true;
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+                
+                // 如果没有匹配的选项，显示提示
+                const noResults = optionsContainer.querySelector('.no-results');
+                if (!hasVisibleOptions) {
+                    if (!noResults) {
+                        const noResultsElement = document.createElement('div');
+                        noResultsElement.className = 'no-results';
+                        noResultsElement.textContent = '没有找到匹配的选项';
+                        optionsContainer.appendChild(noResultsElement);
+                    }
+                } else if (noResults) {
+                    noResults.remove();
+                }
+            });
+            
+            // 切换下拉框显示/隐藏
+            selectBox.addEventListener('click', function() {
+                dropdown.classList.toggle('open');
+                selectBox.classList.toggle('open');
+                arrow.classList.toggle('open');
+                
+                if (dropdown.classList.contains('open')) {
+                    searchInput.focus();
+                }
+            });
+            
+            // 点击页面其他区域关闭下拉框
+            document.addEventListener('click', function(e) {
+                if (!multiSelect.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                    selectBox.classList.remove('open');
+                    arrow.classList.remove('open');
+                }
+            });
+            
+            // 重置按钮
+            resetBtn.addEventListener('click', function() {
+                selectedOptions = [];
+                updateUI();
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+            });
+            
+            // 确认按钮
+            confirmBtn.addEventListener('click', function() {
+                if (selectedOptions.length === 0) {
+                    alert('请至少选择一个选项！');
+                    return;
+                }
+                
+                const selectedTexts = selectedOptions.map(id => {
+                    const option = optionsData.find(o => o.id === id);
+                    return option ? option.text : '';
+                });
+                
+                alert(`您已选择: ${selectedTexts.join(', ')}`);
+            });
+            
+            // 初始化
+            initOptions();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
