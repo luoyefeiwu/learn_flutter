@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hook_up/pages/home/tab_search/filter_bar/data.dart';
 import 'package:hook_up/pages/home/tab_search/filter_bar/item.dart';
+import 'package:hook_up/provider/room_filter.dart';
 import 'package:hook_up/utils/common_picker/index.dart';
+import 'package:provider/provider.dart';
 
 class FilterBar extends StatefulWidget {
   final ValueChanged<FilterBarResult> onChange;
@@ -103,9 +107,42 @@ class _FilterBarState extends State<FilterBar> {
   }
 
   _onChange() {
+    var selectedList = context.watch<FilterBarModel>().selectedList;
+
     if (widget.onChange != null) {
-      widget.onChange(FilterBarResult(areaId, priceId, rentTypeId, moreIds));
+      widget.onChange(
+        FilterBarResult(
+          areaId: areaId,
+          rentTypeId: rentTypeId,
+          priceId: priceId,
+          moreIds: selectedList.toList(),
+        ),
+      );
     }
+  }
+
+  //获取数据
+  _getData() {
+    Map<String, List<GeneralType>> dataList = {
+      'roomType': roomTypeList,
+      'oriented': orientedList,
+      'floor': floorList,
+    };
+    context.read<FilterBarModel>().dataList = dataList;
+  }
+
+  @override
+  void initState() {
+    Timer.run(() {
+      _getData();
+    });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _onChange();
+    super.didChangeDependencies();
   }
 
   @override

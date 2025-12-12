@@ -4,7 +4,9 @@ class FilterBarResult {
   final String rentTypeId;
   final List<String> moreIds;
 
-  FilterBarResult(this.areaId, this.priceId, this.rentTypeId, this.moreIds);
+  FilterBarResult({required this.areaId, required this.priceId, required this.rentTypeId, required this.moreIds});
+
+
 }
 
 //通用
