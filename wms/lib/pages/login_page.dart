@@ -35,8 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       if (result.isSuccess) {
         await TokenManager.saveToken(result.data!);
-        print('Going to: ${Routes.home}');
-        context.go(Routes.home);
+        context.go(Routes.index);
       }
       // 跳转首页
     } catch (e) {
@@ -189,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextButton.styleFrom(
                 backgroundColor: Color.fromARGB(255, 40, 97, 189),
               ),
-              onPressed: () {
+              onPressed: () async {
                 _handleLogin();
               },
               child: Text(

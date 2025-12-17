@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../pages/error_page.dart';
 import '../pages/home/home_page.dart';
+import '../pages/home/index_page.dart';
 import '../pages/login_page.dart';
 
 import 'guards.dart';
@@ -11,18 +12,18 @@ import 'routes.dart';
 
 final appRouter = GoRouter(
   debugLogDiagnostics: true,
-  initialLocation: Routes.home,
+  initialLocation: Routes.index,
+  redirect: checkAuth,
   routes: [
     GoRoute(
-      path: '/',
+      path: '/index',
       name: 'index',
-      builder: (context, state) => HomePage(),
+      builder: (context, state) => IndexPage(),
     ),
     GoRoute(
       path: Routes.home,
       name: 'home',
       builder: (context, state) => HomePage(),
-      redirect: checkAuth,
     ),
     GoRoute(
       path: Routes.login,

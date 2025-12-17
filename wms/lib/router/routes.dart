@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 /// 所有路由路径常量
 class Routes {
   static const String home = '/home';
+  static const String index = '/index';
   static const String login = '/login';
-  static const String user = '/user/:id';
-  static const String search = '/search';
 }
 
 /// 路由参数封装（可选，用于复杂场景）
@@ -40,7 +39,7 @@ extension GoRouterX on BuildContext {
     go(Routes.login, extra: redirect);
   }
 
-  void toUser(String id) => go(Routes.user.replaceAll(':id', id));
-
-  void toSearch(String keyword) => go('${Routes.search}?q=$keyword');
+  // void toUser(String id) => go(Routes.user.replaceAll(':id', id));
+  //
+  // void toSearch(String keyword) => go('${Routes.search}?q=$keyword');
 }

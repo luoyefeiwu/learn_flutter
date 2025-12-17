@@ -6,6 +6,8 @@ import 'package:wms/config/Config.dart';
 import 'package:wms/utils/ApiResult.dart';
 import 'package:wms/utils/TokenManager.dart';
 
+import '../router/app_router.dart';
+
 class ApiClient {
   // 私有的命名构造函数
   ApiClient._internal() {
@@ -40,7 +42,7 @@ class ApiClient {
             print('【响应】${response.statusCode} ${response.data}');
           }
           if (response.data['code'] == 501) {
-            TokenManager.removeToken();
+            _handleUnauthorized();
             Fluttertoast.showToast(msg: '登录已过期，请重新登录');
           }
           return handler.next(response);
@@ -64,6 +66,28 @@ class ApiClient {
   // 模拟从本地获取 token（实际可用 shared_preferences 或 secure_storage）
   Future<String?> _getToken() async {
     return await TokenManager.getToken();
+  }
+
+  /// 处理登录失效逻辑
+  static void _handleUnauthorized() {
+    // 1. 清除本地登录状态（如 token、用户信息）
+    TokenManager.removeToken();
+
+    // 2. 跳转到登录页，并清空路由栈（避免返回原页面）
+    // 方式1：使用 go 并替换整个路由栈（推荐）
+    appRouter.goNamed(
+      'login',
+      // 可选：传递参数（比如跳转前的页面地址，登录后回跳）
+      // extra: {'from': appRouter.location},
+    );
+
+    // 方式2：使用 replace 替换当前路由（如果需要保留部分栈，可使用 pushReplacement）
+    // appRouter.replaceNamed(AppRoute.login.name);
+
+    // 方式3：清空路由栈后跳转（适用于复杂场景）
+    // appRouter.pushReplacementNamed(AppRoute.login.name);
+    // 或
+    // appRouter.navigate('/login');
   }
 
   // 统一错误处理

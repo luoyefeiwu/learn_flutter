@@ -32,8 +32,9 @@ class Application extends StatelessWidget {
           primaryColor: Colors.green,
           appBarTheme: const AppBarTheme(backgroundColor: Colors.green),
         ),
-        routerDelegate: appRouter.routerDelegate,
-        routeInformationParser: appRouter.routeInformationParser,
+        // routerDelegate: appRouter.routerDelegate,
+        // routeInformationParser: appRouter.routeInformationParser,
+        routerConfig: appRouter,
       ),
     );
   }

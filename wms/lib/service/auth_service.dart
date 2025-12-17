@@ -4,6 +4,9 @@ import 'package:wms/service/api_client.dart';
 import 'package:wms/utils/ApiResult.dart';
 import 'package:wms/utils/TokenManager.dart';
 
+import '../models/MyMenu.dart';
+import '../models/UserInfo.dart';
+
 class AuthService {
   final ApiClient _api = ApiClient();
 
@@ -16,16 +19,33 @@ class AuthService {
     return result;
   }
 
+  //是否登录
   Future<bool> isLogin() async {
     return await TokenManager.isLoggedIn();
   }
 
-  //
-
-
   // 获取用户信息
-  // Future<Map<String, dynamic>> getUserInfo() async {
-  //   final data = await _api.get<Map<String, dynamic>>('/user/profile');
-  //   return data;
-  // }
+  Future<ApiResult<UserInfo>> myInfo() async {
+    final result = await _api.post<UserInfo>('/operationApi/perm/query/myInfo');
+    return result;
+  }
+
+  // 获取我的菜单
+  Future<ApiResult<List<MyMenu>>> myMenu() async {
+    var result = await _api.post<List<MyMenu>>(
+      '/operationApi/perm/query/myMenu',
+      data: {},
+      fromJson: (json) {
+        if (json != null) {
+          final list = json as List;
+          return list
+              .map((e) => MyMenu.fromJson(e as Map<String, dynamic>))
+              .toList();
+        } else {
+          return <MyMenu>[];
+        }
+      },
+    );
+    return result;
+  }
 }
