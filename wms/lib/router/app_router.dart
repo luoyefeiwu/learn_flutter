@@ -1,12 +1,15 @@
 //主路由
 
 import 'package:go_router/go_router.dart';
+import 'package:wms/pages/receive/receive_cross_page.dart';
 
 import '../pages/error_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/index_page.dart';
 import '../pages/login_page.dart';
 
+import '../pages/receive/receive_config_page.dart';
+import '../widgets/common/qr_scanner_page.dart';
 import 'guards.dart';
 import 'routes.dart';
 
@@ -16,7 +19,7 @@ final appRouter = GoRouter(
   redirect: checkAuth,
   routes: [
     GoRoute(
-      path: '/index',
+      path: Routes.index,
       name: 'index',
       builder: (context, state) => IndexPage(),
     ),
@@ -29,22 +32,22 @@ final appRouter = GoRouter(
       path: Routes.login,
       name: 'login',
       builder: (context, state) => LoginPage(),
-      // LoginPage(redirect: state.uri.queryParameters['redirect']),
     ),
-    // GoRoute(
-    //   path: Routes.user,
-    //   name: 'user',
-    //   builder: (context, state) => const UserPage(),
-    //   redirect: checkAuth, // ← 应用守卫
-    // ),
-    // GoRoute(
-    //   path: Routes.search,
-    //   name: 'search',
-    //   builder: (context, state) {
-    //     final q = state.uri.queryParameters['q'] ?? '';
-    //     return SearchPage(keyword: q);
-    //   },
-    // ),
+    GoRoute(
+      path: Routes.receiveConfig,
+      name: 'receiveConfig',
+      builder: (context, state) => ReceiveConfigPage(),
+    ),
+    GoRoute(
+      path: Routes.receiveCross,
+      name: 'receiveCross',
+      builder: (context, state) => ReceiveCrossPage(),
+    ),
+    GoRoute(
+      path: Routes.qrScanner,
+      name: 'qrScanner',
+      builder: (context, state) => ScanPage(),
+    ),
   ],
   errorBuilder: (context, state) => const ErrorPage(),
 );

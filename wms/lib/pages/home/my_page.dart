@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wms/utils/TokenManager.dart';
+
+import '../../router/routes.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -57,7 +61,7 @@ class _MyPageState extends State<MyPage> {
         children: [
           CircleAvatar(
             radius: 40,
-            child: Icon(Icons.person,size: 70,),
+            child: Icon(Icons.person, size: 70),
             // backgroundImage: const NetworkImage(
             //   'https://via.placeholder.com/150', // 替换为真实头像 URL
             // ),
@@ -129,7 +133,9 @@ class _MyPageState extends State<MyPage> {
             child: const Text('取消'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              await TokenManager.removeToken();
+              context.go(Routes.login);
               // 执行退出逻辑（清 token、跳转登录页等）
               Navigator.of(ctx).pop();
               ScaffoldMessenger.of(

@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.5.4
   go_router: ^17.0.1
   json_annotation: ^4.9.0
+  mobile_scanner: ^7.1.4
 
 dev_dependencies:
   flutter_test:
@@ -73,7 +74,9 @@ flutter:
   assets:
   # assets-generator-begin
   # assets/img/*
+    - assets/img/changgui.png
     - assets/img/homeIndex.png
+    - assets/img/yueku.png
   # assets-generator-end
 
   # An image asset can refer to one or more resolution-specific "variants", see
