@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wms/utils/HomeJumpIconUtils.dart';
 
 import '../../models/MyMenu.dart';
+import '../../router/routes.dart';
 import '../../service/auth_service.dart';
 import '../../utils/ApiResult.dart';
 
@@ -10,8 +13,6 @@ class MyMenuPage extends StatefulWidget {
 }
 
 class _MyMenuPageState extends State<MyMenuPage> {
-
-
   AuthService authService = AuthService();
 
   List<MyMenu> list = [];
@@ -74,13 +75,31 @@ class _MyMenuPageState extends State<MyMenuPage> {
       runSpacing: 14.0,
       children: [
         for (var item in myMenu.children!) ...[
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 4,
-            child: Column(
-              children: [
-                Icon(Icons.car_rental, color: Colors.blueAccent, size: 35.0),
-                Text(item.resName),
-              ],
+          GestureDetector(
+            onTap: () {
+              var jumpRouteIcon = HomeJumpIconUtils.getJumpRouteIcon(
+                item.resCode,
+              );
+
+              if (jumpRouteIcon.routeKey != null &&
+                  jumpRouteIcon.routeKey!.isNotEmpty) {
+                context.push(jumpRouteIcon.routeKey);
+              }
+            },
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 4,
+              child: Column(
+                children: [
+                  Icon(
+                    HomeJumpIconUtils.getJumpRouteIcon(item.resCode).iconData,
+                    color: HomeJumpIconUtils.getJumpRouteIcon(
+                      item.resCode,
+                    ).color,
+                    size: 35.0,
+                  ),
+                  Text(item.resName),
+                ],
+              ),
             ),
           ),
         ],

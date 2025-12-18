@@ -73,7 +73,9 @@ flutter:
   assets:
   # assets-generator-begin
   # assets/img/*
+    - assets/img/changgui.png
     - assets/img/homeIndex.png
+    - assets/img/yueku.png
   # assets-generator-end
 
   # An image asset can refer to one or more resolution-specific "variants", see

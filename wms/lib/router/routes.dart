@@ -7,6 +7,8 @@ class Routes {
   static const String home = '/home';
   static const String index = '/index';
   static const String login = '/login';
+  static const String receiveConfig = '/receiveConfig';
+  static const String receiveCross = '/receiveCross';
 }
 
 /// 路由参数封装（可选，用于复杂场景）

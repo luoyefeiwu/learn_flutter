@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenManager {
   static const String _tokenKey = 'dt_sessionId';
-  static const String _warehouseCode = 'warehouseCode';
+  static const String warehouseInfo = 'warehouseInfo';
 
   // 保存 Token
   static Future<void> saveToken(String token) async {

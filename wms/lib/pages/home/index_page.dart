@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wms/router/routes.dart';
+import 'package:wms/utils/TokenManager.dart';
 
 import '../../models/Warehouse.dart';
 import '../../service/warehouse_service.dart';
@@ -41,6 +44,14 @@ class _IndexPageState extends State<IndexPage> {
             backgroundColor: Color.fromARGB(255, 40, 97, 189),
           ),
           onPressed: () {
+            //设置缓存
+            var warehouseInfo = list
+                .where((item) => item.warehouseCode == _selectedwarehouseCode)
+                .first;
+            TokenManager.saveCache(
+              TokenManager.warehouseInfo,
+              jsonEncode(warehouseInfo),
+            );
             context.push(Routes.home);
           },
           child: Text(
