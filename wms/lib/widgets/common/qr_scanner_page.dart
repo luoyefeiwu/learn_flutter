@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -25,6 +26,11 @@ class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('扫码'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
       body: MobileScanner(
         controller: _controller,
         onDetect: (capture) {
@@ -34,6 +40,9 @@ class _ScanPageState extends State<ScanPage> {
             // 立即停止扫描（关键！）
             _controller.stop();
             if (context.mounted) {
+              if (kDebugMode) {
+                print('【扫描结果是:】${result}');
+              }
               context.pop(result);
             }
           }

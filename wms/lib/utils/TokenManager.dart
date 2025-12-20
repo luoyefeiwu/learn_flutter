@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TokenManager {
   static const String _tokenKey = 'dt_sessionId';
   static const String warehouseInfo = 'warehouseInfo';
+  static const String userInfo = 'userInfo';
 
   // 保存 Token
   static Future<void> saveToken(String token) async {
@@ -32,6 +33,11 @@ class TokenManager {
   static Future<void> saveCache(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, value);
+  }
+
+  static Future<String?> getCache(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return await prefs.getString(key);
   }
 
   static Future<void> clearCache(String key) async {

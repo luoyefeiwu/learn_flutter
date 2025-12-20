@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wms/service/auth_service.dart';
@@ -35,6 +37,13 @@ class _LoginPageState extends State<LoginPage> {
       );
       if (result.isSuccess) {
         await TokenManager.saveToken(result.data!);
+        var myInfo = await _authService.myInfo();
+        if (myInfo.isSuccess) {
+          await TokenManager.saveCache(
+            TokenManager.userInfo,
+            jsonEncode(myInfo.data),
+          );
+        }
         context.go(Routes.index);
       }
       // 跳转首页

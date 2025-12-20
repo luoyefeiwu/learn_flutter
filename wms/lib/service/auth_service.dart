@@ -26,7 +26,14 @@ class AuthService {
 
   // 获取用户信息
   Future<ApiResult<UserInfo>> myInfo() async {
-    final result = await _api.post<UserInfo>('/operationApi/perm/query/myInfo');
+    final result = await _api.post<UserInfo>(
+      '/operationApi/perm/query/myInfo',
+      data: {},
+      fromJson: (json) {
+        final map = json as Map<String, dynamic>;
+        return UserInfo.fromJson(map);
+      },
+    );
     return result;
   }
 

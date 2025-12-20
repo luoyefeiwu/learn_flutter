@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:wms/utils/TokenManager.dart';
 
+import '../../models/UserInfo.dart';
+import '../../models/Warehouse.dart';
 import '../../router/routes.dart';
+import '../../utils/WarehouseUtils.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -12,6 +16,15 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  Warehouse? warehouse;
+  UserInfo? userInfo;
+
+  @override
+  void initState() {
+    _loadData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,29 +81,39 @@ class _MyPageState extends State<MyPage> {
             backgroundColor: Colors.grey[300],
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '杭州平安仓',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              // const SizedBox(height: 4),
-              // const SizedBox(height: 8),
-              // OutlinedButton(
-              //   onPressed: () {
-              //     // 跳转到编辑资料页
-              //     ScaffoldMessenger.of(
-              //       context,
-              //     ).showSnackBar(const SnackBar(content: Text('跳转到编辑资料')));
-              //   },
-              //   style: OutlinedButton.styleFrom(
-              //     side: BorderSide(color: Colors.blue.shade300),
-              //     foregroundColor: Colors.blue.shade700,
-              //   ),
-              //   child: const Text('编辑资料'),
-              // ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userInfo?.realName ?? "",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  softWrap: true,
+                  maxLines: 2,
+                  userInfo?.roles != null
+                      ? userInfo!.roles!.map((item) => item.roleName).join(',')
+                      : "",
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                // const SizedBox(height: 4),
+                // const SizedBox(height: 8),
+                // OutlinedButton(
+                //   onPressed: () {
+                //     // 跳转到编辑资料页
+                //     ScaffoldMessenger.of(
+                //       context,
+                //     ).showSnackBar(const SnackBar(content: Text('跳转到编辑资料')));
+                //   },
+                //   style: OutlinedButton.styleFrom(
+                //     side: BorderSide(color: Colors.blue.shade300),
+                //     foregroundColor: Colors.blue.shade700,
+                //   ),
+                //   child: const Text('编辑资料'),
+                // ),
+              ],
+            ),
           ),
         ],
       ),
@@ -100,21 +123,26 @@ class _MyPageState extends State<MyPage> {
   // 功能菜单项
   List<Widget> _buildMenuItems(BuildContext context) {
     final items = [
-      {'icon': Icons.person, 'title': '当前仓库', 'onTap': () {}},
-      {'icon': Icons.lock, 'title': '设备管理', 'onTap': () {}},
-      {'icon': Icons.notifications, 'title': '修改密码', 'onTap': () {}},
-      {'icon': Icons.payment, 'title': '我的二维码', 'onTap': () {}},
-      {'icon': Icons.language, 'title': '版本更新', 'onTap': () {}},
-      {'icon': Icons.dark_mode, 'title': '清楚缓存', 'onTap': () {}},
-      {'icon': Icons.help, 'title': '环境切换', 'onTap': () {}},
-      {'icon': Icons.info, 'title': '关于我们', 'onTap': () {}},
+      {'icon': Icons.person, 'title': '当前仓库', 'onTap': () {}, 'type': 1},
+      {'icon': Icons.lock, 'title': '设备管理', 'onTap': () {}, 'type': 2},
+      {'icon': Icons.notifications, 'title': '修改密码', 'onTap': () {}, 'type': 3},
+      {'icon': Icons.payment, 'title': '我的二维码', 'onTap': () {}, 'type': 4},
+      {'icon': Icons.language, 'title': '版本更新', 'onTap': () {}, 'type': 5},
+      {'icon': Icons.dark_mode, 'title': '清楚缓存', 'onTap': () {}, 'type': 6},
+      {'icon': Icons.help, 'title': '环境切换', 'onTap': () {}, 'type': 7},
+      {'icon': Icons.info, 'title': '关于我们', 'onTap': () {}, 'type': 8},
     ];
 
     return items.map((item) {
       return ListTile(
         leading: Icon(item['icon'] as IconData),
         title: Text(item['title'] as String),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: item['type'] == 1
+            ? Text(
+                warehouse == null ? "" : warehouse!.warehouseName,
+                style: TextStyle(fontSize: 20),
+              )
+            : const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: item['onTap'] as void Function(),
       );
     }).toList();
@@ -147,5 +175,14 @@ class _MyPageState extends State<MyPage> {
         ],
       ),
     );
+  }
+
+  void _loadData() async {
+    var result = await WarehouseUtils.getWarehouseInfo();
+    var user = await WarehouseUtils.getUserInfo();
+    setState(() {
+      warehouse = result!;
+      userInfo = user;
+    });
   }
 }

@@ -45,6 +45,17 @@ class ApiClient {
             _handleUnauthorized();
             Fluttertoast.showToast(msg: '登录已过期，请重新登录');
           }
+          if (response.data['code'] != 200 && response.data['code'] != 0) {
+            Fluttertoast.showToast(
+              msg: response.data['msg'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black12,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          }
           return handler.next(response);
         },
         onError: (DioException e, handler) {

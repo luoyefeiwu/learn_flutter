@@ -3,7 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../router/routes.dart';
-import '../../widgets/common/qr_scanner_page.dart';
+import '../../service/receive_service.dart';
+import '../../utils/WarehouseUtils.dart';
+import '../../widgets/common/show_toast_utils.dart';
 
 class ReceiveCrossPage extends StatefulWidget {
   const ReceiveCrossPage({super.key});
@@ -13,6 +15,8 @@ class ReceiveCrossPage extends StatefulWidget {
 }
 
 class _ReceiveCrossPageState extends State<ReceiveCrossPage> {
+  ReceiveService receiveService = ReceiveService();
+
   String? _scanResult;
 
   TextEditingController _scanNoController = TextEditingController();
@@ -78,6 +82,8 @@ class _ReceiveCrossPageState extends State<ReceiveCrossPage> {
           hintText: '请扫商品码',
           hintStyle: const TextStyle(fontSize: 16),
           border: const OutlineInputBorder(),
+          contentPadding: EdgeInsets.only(right: 1),
+          isDense: true,
           suffixIcon: IconButton(
             icon: const Icon(Icons.camera_alt_outlined),
             onPressed: () {
@@ -87,6 +93,20 @@ class _ReceiveCrossPageState extends State<ReceiveCrossPage> {
         ),
         onChanged: (value) {
           //调用接口
+        },
+        onSubmitted: (value) async {
+          var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+          if (warehouseInfo == null) {
+            Fluttertoast.showToast(msg: '请先选择仓库');
+            return;
+          }
+          var result = await receiveService.crossScanCode({
+            "scanNo": _scanNoController.text,
+            "warehouseCode": warehouseInfo!.warehouseCode,
+          });
+          if (!result.isSuccess) {
+            ShowToastUtils.show(result.message);
+          }
         },
       ),
     );
@@ -151,7 +171,6 @@ class _ReceiveCrossPageState extends State<ReceiveCrossPage> {
       setState(() {
         _scanResult = result as String?;
         _scanNoController.text = _scanResult ?? '';
-        Fluttertoast.showToast(msg: '扫码结果是:${_scanResult}');
       });
     }
   }
