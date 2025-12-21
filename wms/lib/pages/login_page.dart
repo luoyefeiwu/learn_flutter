@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wms/service/auth_service.dart';
 import 'package:wms/utils/TokenManager.dart';
 
+import '../config/cache_key.dart';
 import '../r.dart';
 import '../router/routes.dart';
 
@@ -19,12 +20,18 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passWordController = TextEditingController();
   bool _obscurePassword = true;
+  String baseUrl = "";
 
   @override
   void dispose() {
     _userNameController.dispose();
     _passWordController.dispose();
     super.dispose();
+  }
+
+  void initState() {
+    super.initState();
+    _loadData();
   }
 
   final AuthService _authService = AuthService();
@@ -40,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         var myInfo = await _authService.myInfo();
         if (myInfo.isSuccess) {
           await TokenManager.saveCache(
-            TokenManager.userInfo,
+            CacheKey.userInfo,
             jsonEncode(myInfo.data),
           );
         }
@@ -66,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Image.asset(R.assetsImgHomeIndex, width: 100, height: 150),
             ),
             Text(
-              '欢迎登录鼎腾WMS',
+              '欢迎登录鼎腾WMS' + baseUrl,
               style: TextStyle(fontSize: 20.0),
               textAlign: TextAlign.center,
             ),
@@ -209,5 +216,14 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _loadData() async {
+    var result = await TokenManager.getCache(CacheKey.baseUrl);
+    if (result != null) {
+      setState(() {
+        baseUrl = result.toString();
+      });
+    }
   }
 }

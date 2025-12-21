@@ -18,12 +18,25 @@ class _MyMenuPageState extends State<MyMenuPage> {
   List<MyMenu> list = [];
 
   @override
-  void initState() {
-    super.initState();
-    findMyMenu();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final GoRouterState? routerState = GoRouterState.of(context);
+    final extra = routerState?.extra as Map<String, dynamic>?;
+    if (extra?['refresh'] == true) {
+      // 延迟一点确保页面已构建（可选）
+      Future.microtask(() {
+        _loadData(); // 重新加载
+      });
+    }
   }
 
-  void findMyMenu() async {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() async {
     ApiResult<List<MyMenu>> result = await authService.myMenu();
     if (result.isSuccess) {
       setState(() {

@@ -1,11 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wms/config/cache_key.dart';
+import 'package:wms/service/warehouse_service.dart';
 
 import 'package:wms/utils/TokenManager.dart';
 
+import '../../models/Project.dart';
 import '../../models/UserInfo.dart';
 import '../../models/Warehouse.dart';
 import '../../router/routes.dart';
+import '../../service/api_client.dart';
 import '../../utils/WarehouseUtils.dart';
 
 class MyPage extends StatefulWidget {
@@ -16,8 +22,13 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  final ApiClient _api = ApiClient();
   Warehouse? warehouse;
   UserInfo? userInfo;
+
+  List<ProjectItem> projectItemList = [];
+
+  WarehouseService _warehouseService = WarehouseService();
 
   @override
   void initState() {
@@ -128,8 +139,23 @@ class _MyPageState extends State<MyPage> {
       {'icon': Icons.notifications, 'title': '修改密码', 'onTap': () {}, 'type': 3},
       {'icon': Icons.payment, 'title': '我的二维码', 'onTap': () {}, 'type': 4},
       {'icon': Icons.language, 'title': '版本更新', 'onTap': () {}, 'type': 5},
-      {'icon': Icons.dark_mode, 'title': '清楚缓存', 'onTap': () {}, 'type': 6},
-      {'icon': Icons.help, 'title': '环境切换', 'onTap': () {}, 'type': 7},
+      {
+        'icon': Icons.dark_mode,
+        'title': '清除缓存',
+        'onTap': () {
+          TokenManager.clearCache(CacheKey.warehouseInfo);
+          context.go(Routes.index, extra: {"refresh": true});
+        },
+        'type': 6,
+      },
+      {
+        'icon': Icons.help,
+        'title': '环境切换',
+        'onTap': () {
+          _showCupertinoPicker(context);
+        },
+        'type': 7,
+      },
       {'icon': Icons.info, 'title': '关于我们', 'onTap': () {}, 'type': 8},
     ];
 
@@ -180,9 +206,91 @@ class _MyPageState extends State<MyPage> {
   void _loadData() async {
     var result = await WarehouseUtils.getWarehouseInfo();
     var user = await WarehouseUtils.getUserInfo();
+    var projects = await _warehouseService.projectList();
     setState(() {
       warehouse = result!;
       userInfo = user;
+      projectItemList = projects.data!;
+    });
+  }
+
+  void _showCupertinoPicker(BuildContext context) {
+    int selectedIndex = 0;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 250,
+          child: Column(
+            children: [
+              // 标题栏（可选）
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: CupertinoColors.separator,
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      sizeStyle: CupertinoButtonSize.small,
+                      child: const Text('取消'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    CupertinoButton(
+                      sizeStyle: CupertinoButtonSize.small,
+                      child: const Text('确定'),
+                      onPressed: () {
+                        Navigator.pop(
+                          context,
+                          projectItemList[selectedIndex],
+                        ); // 返回选中值
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              // 滚轮选择器
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 32,
+                  backgroundColor: Colors.white,
+                  onSelectedItemChanged: (int index) {
+                    selectedIndex = index;
+                  },
+                  children: projectItemList
+                      .map((e) => Center(child: Text(e.projectName!)))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ).then((value) async {
+      if (value != null) {
+        ProjectItem projectItem = value;
+        var detail = await _warehouseService.projectDetail(
+          projectItem.projectCode!,
+        );
+        if (detail.isSuccess) {
+          await TokenManager.saveCache(
+            CacheKey.baseUrl,
+            "https://${detail.data?.projectInfo?.apiDomain}",
+          );
+          _api.setBaseUrl();
+          context.go(Routes.index, extra: {"refresh": true});
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('切换环境失败')));
+        }
+      }
     });
   }
 }

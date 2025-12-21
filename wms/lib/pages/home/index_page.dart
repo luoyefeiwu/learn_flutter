@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wms/router/routes.dart';
 import 'package:wms/utils/TokenManager.dart';
 
+import '../../config/cache_key.dart';
 import '../../models/Warehouse.dart';
 import '../../service/warehouse_service.dart';
 
@@ -22,9 +23,22 @@ class _IndexPageState extends State<IndexPage> {
   String? _selectedwarehouseCode = '';
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final GoRouterState? routerState = GoRouterState.of(context);
+    final extra = routerState?.extra as Map<String, dynamic>?;
+    if (extra?['refresh'] == true) {
+      // 延迟一点确保页面已构建（可选）
+      Future.microtask(() {
+        _loadData(); // 重新加载
+      });
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-    findAllWarehouse();
+    _loadData();
   }
 
   @override
@@ -49,10 +63,10 @@ class _IndexPageState extends State<IndexPage> {
                 .where((item) => item.warehouseCode == _selectedwarehouseCode)
                 .first;
             TokenManager.saveCache(
-              TokenManager.warehouseInfo,
+              CacheKey.warehouseInfo,
               jsonEncode(warehouseInfo),
             );
-            context.push(Routes.home);
+            context.push(Routes.home, extra: {'refresh': true});
           },
           child: Text(
             '确定',
@@ -84,7 +98,7 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-  void findAllWarehouse() async {
+  void _loadData() async {
     var result = await warehouseService.listWarehouseByUser();
     if (result.isSuccess) {
       setState(() {

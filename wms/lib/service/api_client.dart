@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wms/config/Config.dart';
+import 'package:wms/config/cache_key.dart';
 import 'package:wms/utils/ApiResult.dart';
 import 'package:wms/utils/TokenManager.dart';
 
@@ -12,7 +13,7 @@ class ApiClient {
   // 私有的命名构造函数
   ApiClient._internal() {
     // 基础配置
-    _dio.options.baseUrl = 'https://fatapi.dingteng.tech';
+    _dio.options.baseUrl = "https://fatapi.dingteng.tech/";
     _dio.options.connectTimeout = const Duration(seconds: 10);
     _dio.options.receiveTimeout = const Duration(seconds: 10);
 
@@ -162,6 +163,21 @@ class ApiClient {
       queryParameters: queryParameters,
     );
     return ApiResult.fromJson(response.data, fromJson ?? (json) => json as T);
+  }
+
+  void switchBaseUrl(String newBaseUrl) {
+    _dio.close();
+    if (!newBaseUrl.endsWith('/')) {
+      newBaseUrl += '/'; // 自动补全 /
+    }
+    _dio.options.baseUrl = newBaseUrl;
+  }
+
+  Future<void> setBaseUrl() async {
+    var cache = await TokenManager.getCache(CacheKey.baseUrl);
+    if (cache != null && cache != '') {
+      switchBaseUrl(cache);
+    }
   }
 
   // // PUT / DELETE 等可按需添加
