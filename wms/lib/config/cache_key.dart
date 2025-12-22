@@ -10,4 +10,13 @@ class CacheKey {
 
   /// 基础url
   static const String baseUrl = 'baseUrl';
+
+  // appCode
+  static const String appcode = 'new_wms_app';
+
+  //app 类型
+  static const String appType = '3';
+
+  //app 版本
+  static const String appVersion = '1.7.2';
 }

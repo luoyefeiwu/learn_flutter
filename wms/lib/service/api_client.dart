@@ -25,12 +25,13 @@ class ApiClient {
             // 添加 Token（从本地存储获取，示例用变量代替）
             final token = await _getToken();
             if (token != null) {
-              options.headers['dt_sessionId'] = token;
+              options.headers[CacheKey.tokenKey] = token;
             }
           }
-          options.headers['appcode'] = 'new_wms_app';
-          options.headers['appType'] = '3';
-          options.headers['appVersion'] = '1.7.2';
+          options.headers['Content-Type'] = 'application/json';
+          options.headers['appcode'] = CacheKey.appcode;
+          options.headers['appType'] = CacheKey.appType;
+          options.headers['appVersion'] = CacheKey.appVersion;
           if (kDebugMode) {
             print(
               '【请求】${options.method} ${options.path} | headers: ${options.headers}',
@@ -44,7 +45,16 @@ class ApiClient {
           }
           if (response.data['code'] == 501) {
             _handleUnauthorized();
-            Fluttertoast.showToast(msg: '登录已过期，请重新登录');
+            Fluttertoast.showToast(
+              msg: "登录已过期，请重新登录",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black12,
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+            return;
           }
           if (response.data['code'] != 200 && response.data['code'] != 0) {
             Fluttertoast.showToast(
@@ -53,9 +63,10 @@ class ApiClient {
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.black12,
-              textColor: Colors.white,
+              textColor: Colors.black,
               fontSize: 16.0,
             );
+            //return;
           }
           return handler.next(response);
         },

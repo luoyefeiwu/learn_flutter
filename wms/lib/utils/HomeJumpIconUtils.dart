@@ -18,6 +18,12 @@ class HomeJumpIconUtils {
       iconData: Icons.local_shipping,
       name: '收货',
     ),
+    "PackagingHome": HomeJumpRouteIcon(
+      color: Colors.blue,
+      routeKey: Routes.packingCross,
+      iconData: Icons.backpack,
+      name: '打包',
+    ),
   };
 
   static HomeJumpRouteIcon getJumpRouteIcon(String code) {

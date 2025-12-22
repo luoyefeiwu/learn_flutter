@@ -10,6 +10,7 @@ class Routes {
   static const String receiveConfig = '/receiveConfig';
   static const String receiveCross = '/receiveCross';
   static const String qrScanner = '/qrScanner';
+  static const String packingCross = '/packingCross';
 }
 
 /// 路由参数封装（可选，用于复杂场景）
