@@ -279,11 +279,11 @@ class _MyPageState extends State<MyPage> {
           projectItem.projectCode!,
         );
         if (detail.isSuccess) {
-          await TokenManager.saveCache(
-            CacheKey.baseUrl,
-            "https://${detail.data?.projectInfo?.apiDomain}",
-          );
-          _api.setBaseUrl();
+          // await TokenManager.saveCache(
+          //   CacheKey.baseUrl,
+          //   "https://${detail.data?.projectInfo?.apiDomain}",
+          // );
+          // _api.setBaseUrl();
           context.go(Routes.index, extra: {"refresh": true});
         } else {
           ScaffoldMessenger.of(

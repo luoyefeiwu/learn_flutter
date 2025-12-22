@@ -75,6 +75,8 @@ flutter:
   # assets-generator-begin
   # assets/img/*
     - assets/img/changgui.png
+    - assets/img/collection_empty.png
+    - assets/img/collection_green.png
     - assets/img/homeIndex.png
     - assets/img/qidong.png
     - assets/img/yueku.png

@@ -1,6 +1,7 @@
 //主路由
 
 import 'package:go_router/go_router.dart';
+import 'package:wms/pages/pack/pack_cross.dart';
 import 'package:wms/pages/receive/receive_cross_page.dart';
 
 import '../pages/error_page.dart';
@@ -47,6 +48,11 @@ final appRouter = GoRouter(
       path: Routes.qrScanner,
       name: 'qrScanner',
       builder: (context, state) => ScanPage(),
+    ),
+    GoRoute(
+      path: Routes.packingCross,
+      name: 'packingCross',
+      builder: (context, state) => PackCrossPage(),
     ),
   ],
   errorBuilder: (context, state) => const ErrorPage(),

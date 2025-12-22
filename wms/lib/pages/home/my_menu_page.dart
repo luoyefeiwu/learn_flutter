@@ -93,7 +93,6 @@ class _MyMenuPageState extends State<MyMenuPage> {
               var jumpRouteIcon = HomeJumpIconUtils.getJumpRouteIcon(
                 item.resCode,
               );
-
               if (jumpRouteIcon.routeKey != null &&
                   jumpRouteIcon.routeKey!.isNotEmpty) {
                 context.push(jumpRouteIcon.routeKey);

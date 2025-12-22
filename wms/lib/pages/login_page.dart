@@ -219,11 +219,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _loadData() async {
-    var result = await TokenManager.getCache(CacheKey.baseUrl);
-    if (result != null) {
-      setState(() {
-        baseUrl = result.toString();
-      });
-    }
+    // var result = await TokenManager.getCache(CacheKey.baseUrl);
+    // if (result != null) {
+    //   setState(() {
+    //     baseUrl = result.toString();
+    //   });
+    // }
   }
 }
