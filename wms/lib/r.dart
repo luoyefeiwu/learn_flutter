@@ -1,4 +1,6 @@
 class R {
+  /// ![](http://127.0.0.1:8888/assets/img/app_icon.png)
+  static final String assetsImgAppIcon = 'assets/img/app_icon.png';
   /// ![](http://127.0.0.1:8888/assets/img/changgui.png)
   static final String assetsImgChanggui = 'assets/img/changgui.png';
   /// ![](http://127.0.0.1:8888/assets/img/collection_empty.png)

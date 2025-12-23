@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import '../models/receive/CrossStorageScanInfo.dart';
+import '../models/receive/WaitScanList.dart';
 import '../utils/ApiResult.dart';
 import 'api_client.dart';
 
@@ -38,6 +39,20 @@ class ReceiveService {
           return json['code'] == 200 || json['code'] == 0;
         }
         return false;
+      },
+    );
+    return result;
+  }
+
+  /// 获取待打包清单
+  /// {"code":"XS0325121840211X.CG251218121151.1001901","operateConfigModelCode":"scan_store_goods_container_goods_reprint","warehouseCode":"HZC02"}
+  Future<ApiResult<WaitScanList>> packageScan(Map<String, dynamic> map) async {
+    var result = await _api.post<WaitScanList>(
+      '/dtwmsApi/packageManage/packageScan',
+      data: map,
+      fromJson: (json) {
+        final map = json as Map<String, dynamic>;
+        return WaitScanList.fromJson(map);
       },
     );
     return result;

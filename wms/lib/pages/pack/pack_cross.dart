@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../router/routes.dart';
+import '../../service/receive_service.dart';
+import '../../utils/WarehouseUtils.dart';
 
 class PackCrossPage extends StatefulWidget {
   const PackCrossPage({super.key});
@@ -16,25 +18,26 @@ class _PackCrossPageState extends State<PackCrossPage> {
 
   TextEditingController _scanNoController = TextEditingController();
 
+  ReceiveService _receiveService = ReceiveService();
+
   FocusNode _focusNode = FocusNode();
 
-  List<PackCross> list = [
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+  List<PackCrossList> list = [
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
+    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
   ];
 
   @override
   void initState() {
     super.initState();
-
     // 监听焦点变化
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
@@ -89,7 +92,7 @@ class _PackCrossPageState extends State<PackCrossPage> {
           //调用接口
         },
         onSubmitted: (value) async {
-          // _loadScanInfo();
+          _loadScanInfo();
         },
       ),
     );
@@ -227,11 +230,10 @@ class _PackCrossPageState extends State<PackCrossPage> {
           SingleChildScrollView(
             child: Container(
               alignment: Alignment.topLeft,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.5),
-              ),
+              decoration: BoxDecoration(border: Border.all(width: 0.5)),
+              height: totalHeight - 10.0,
               width: MediaQuery.of(context).size.width - 90.0,
-              margin: EdgeInsets.only(top: 10.0),
+              margin: EdgeInsets.only(top: 10.0,left: 1),
               child: Column(
                 children: list.map((item) => _buildRightItem(item)).toList(),
               ),
@@ -262,24 +264,119 @@ class _PackCrossPageState extends State<PackCrossPage> {
     );
   }
 
-  Widget _buildRightItem(PackCross item) {
+  Widget _buildRightItem(PackCrossList packCrossList) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width - 130.0,
-          decoration: BoxDecoration(color: Color(0x803662EC)),
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(5.0),
+          width: MediaQuery.of(context).size.width - 90.0,
+          decoration: BoxDecoration(color: Color(0xFF3662EC)),
           child: Text(
-            softWrap: true,
-            maxLines: 1,
-            overflow: TextOverflow.clip,
-            "${item.skuName} ${item.scanNum}/${item.num}",
-            style: TextStyle(fontSize: 12.0, color: Colors.red),
+            '车型: ${packCrossList.carModelName}',
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        SizedBox(height: 5.0),
+        for (var item in packCrossList.waitPackList) ...[
+          GestureDetector(
+            onTap: () {
+              list.forEach(
+                (e) => e.waitPackList.forEach((a) => a.isChecked = false),
+              );
+              setState(() {
+                item.isChecked = true;
+              });
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width - 130.0,
+              decoration: BoxDecoration(
+                color: item.isChecked ? Color(0x803662EC) : Colors.white,
+              ),
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      "${item.oeCode == null ? '' : item.oeCode}${item.skuName}",
+                      style: TextStyle(fontSize: 12.0, color: Colors.red),
+                    ),
+                  ),
+                  Text(
+                    "${item.scanNum}/${item.num}",
+                    style: TextStyle(fontSize: 12.0, color: Colors.red),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 5.0),
+        ],
       ],
     );
+  }
+
+  /// 加载待打包清单
+  void _loadWaitPackList() async {
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    var map = {
+      "code": _scanNoController.text,
+      "operateConfigModelCode": "scan_store_goods_container_goods_reprint",
+      "warehouseCode": warehouseInfo?.warehouseCode,
+    };
+    var result = await _receiveService.packageScan(map);
+    if (result.isSuccess) {
+      // 按 carModelName 分组
+      Map<String?, List<PackCross>> groupedMap = {};
+
+      for (var item in result.data!.list) {
+        String? carModelName = item.carModelName;
+
+        if (!groupedMap.containsKey(carModelName)) {
+          groupedMap[carModelName] = [];
+        }
+
+        groupedMap[carModelName]!.add(
+          PackCross(
+            item.carModelName,
+            item.oeName,
+            item.skuCode,
+            item.totalNum,
+            0,
+            // scanNum 初始化为 0
+            false,
+            // isChecked 初始化为 false
+            item.scanNo,
+            item.oeCode,
+          ),
+        );
+      }
+
+      // 清空现有列表
+      list.clear();
+
+      // 将分组结果转换为 PackCrossList 添加到主列表
+      groupedMap.forEach((carModelName, packCrossList) {
+        list.add(PackCrossList(carModelName, packCrossList));
+      });
+    }
+    setState(() {
+      list = list;
+      _scanNoController.text = "";
+    });
+  }
+
+  void _loadScanPack() {}
+
+  void _loadScanInfo() {
+    if (list.isEmpty) {
+      _loadWaitPackList();
+    } else {
+      _loadScanPack();
+    }
   }
 
   void _startScan() async {
@@ -289,9 +386,21 @@ class _PackCrossPageState extends State<PackCrossPage> {
         _scanResult = result as String?;
         _scanNoController.text = _scanResult ?? '';
       });
-      //_loadScanInfo();
+      if (list.isEmpty) {
+        _loadWaitPackList();
+      } else {}
     }
   }
+}
+
+class PackCrossList {
+  ///车型名称
+  String? carModelName;
+
+  //待打包列表
+  List<PackCross> waitPackList;
+
+  PackCrossList(this.carModelName, this.waitPackList);
 }
 
 class PackCross {
@@ -301,6 +410,8 @@ class PackCross {
   int num;
   int scanNum;
   bool isChecked;
+  String scanNo;
+  String? oeCode;
 
   PackCross(
     this.carModelName,
@@ -309,5 +420,7 @@ class PackCross {
     this.num,
     this.scanNum,
     this.isChecked,
+    this.scanNo,
+    this.oeCode,
   );
 }

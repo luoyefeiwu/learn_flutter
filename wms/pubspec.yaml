@@ -42,6 +42,7 @@ dependencies:
   go_router: ^17.0.1
   json_annotation: ^4.9.0
   mobile_scanner: ^7.1.4
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,30 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   build_runner: ^2.10.4
   json_serializable: ^6.11.3
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/img/app_icon.png"
+  # 可选：设置背景色（仅 Android Adaptive Icon 需要）
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/img/app_icon.png"
+  # 设置应用名称
+  android_app_name: "WMS"
+  ios_app_name: "WMS"
+#执行命令替换安装图标 flutter pub run flutter_launcher_icons:main
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/img/qidong.png
+  android_12:
+    color: "#ffffff"
+    image: assets/img/qidong.png
+
+  # 执行命令 启动图片 flutter pub run flutter_native_splash:create
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,8 +97,9 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-  # assets-generator-begin
-  # assets/img/*
+    # assets-generator-begin
+    # assets/img/*
+    - assets/img/app_icon.png
     - assets/img/changgui.png
     - assets/img/collection_empty.png
     - assets/img/collection_green.png
