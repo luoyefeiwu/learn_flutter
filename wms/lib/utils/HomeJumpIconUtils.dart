@@ -24,6 +24,12 @@ class HomeJumpIconUtils {
       iconData: Icons.backpack,
       name: '打包',
     ),
+    "wms_zhi_Jian": HomeJumpRouteIcon(
+      color: Colors.green,
+      routeKey: Routes.crossCheck,
+      iconData: Icons.high_quality_outlined,
+      name: '质检',
+    ),
   };
 
   static HomeJumpRouteIcon getJumpRouteIcon(String code) {

@@ -8,8 +8,8 @@ class ShowToastUtils {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
+      backgroundColor: Colors.black12,
+      textColor: Colors.black,
       fontSize: 16.0,
     );
   }

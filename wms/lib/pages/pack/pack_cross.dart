@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wms/widgets/common/show_toast_utils.dart';
 
+import '../../models/pack/PackProductInfo.dart';
 import '../../router/routes.dart';
 import '../../service/receive_service.dart';
 import '../../utils/WarehouseUtils.dart';
@@ -13,7 +17,8 @@ class PackCrossPage extends StatefulWidget {
 }
 
 class _PackCrossPageState extends State<PackCrossPage> {
-  bool _isChecked = false;
+  // 反扫
+  bool _isReverseScanChecked = false;
   String? _scanResult;
 
   TextEditingController _scanNoController = TextEditingController();
@@ -22,18 +27,14 @@ class _PackCrossPageState extends State<PackCrossPage> {
 
   FocusNode _focusNode = FocusNode();
 
-  List<PackCrossList> list = [
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-    // PackCross("carModelName", "测试左大灯", "skuCode", 1, 2, false),
-  ];
+  PackProductInfo? _packProductInfo;
+
+  List<PackCrossList> list = [];
+
+  int _scanCount = 0;
+
+  // 每扫一次增加的数量
+  int _addCount = 1;
 
   @override
   void initState() {
@@ -92,6 +93,9 @@ class _PackCrossPageState extends State<PackCrossPage> {
           //调用接口
         },
         onSubmitted: (value) async {
+          setState(() {
+            _scanResult = _scanNoController.text.trim();
+          });
           _loadScanInfo();
         },
       ),
@@ -111,10 +115,10 @@ class _PackCrossPageState extends State<PackCrossPage> {
             children: [
               Checkbox(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: _isChecked,
+                value: _isReverseScanChecked,
                 onChanged: (bool? value) {
                   setState(() {
-                    _isChecked = value ?? false;
+                    _isReverseScanChecked = !_isReverseScanChecked;
                   });
                 },
               ),
@@ -144,7 +148,7 @@ class _PackCrossPageState extends State<PackCrossPage> {
       ),
       child: Column(
         children: [
-          Text('包装信息提醒'),
+          Text('包装信息提醒', style: TextStyle(fontWeight: FontWeight.bold)),
           Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,13 +159,36 @@ class _PackCrossPageState extends State<PackCrossPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('有无销售单:'),
-                        Text('订单备注:'),
-                        Text('订单标签:'),
-                        Text('物流线路:'),
-                        Text('物流线路:'),
-                        Text('内部备注:'),
-                        Text('集包容器号:'),
+                        _buildPackageRemindLeftItem(
+                          title: '有无销售单: ',
+                          content: _packProductInfo?.firstPackage == 1
+                              ? "有"
+                              : "",
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '订单备注: ',
+                          content: _packProductInfo?.remark,
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '订单标签: ',
+                          content: _packProductInfo?.orderLabel!,
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '物流线路: ',
+                          content: _packProductInfo?.logisticsRoute!,
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '报价员: ',
+                          content: _packProductInfo?.drawer!,
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '内部备注: ',
+                          content: _packProductInfo?.internalRemarks!,
+                        ),
+                        _buildPackageRemindLeftItem(
+                          title: '集包容器号: ',
+                          content: _packProductInfo?.containerNo!,
+                        ),
                       ],
                     ),
                   ),
@@ -174,7 +201,7 @@ class _PackCrossPageState extends State<PackCrossPage> {
                   ),
                   child: Center(
                     child: Text(
-                      "0",
+                      '${_scanCount}',
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 60,
@@ -219,7 +246,7 @@ class _PackCrossPageState extends State<PackCrossPage> {
                   flex: 2,
                   child: GestureDetector(
                     onTap: () {
-                      // _submit();
+                      _submit();
                     },
                     child: _buildLeftItem('打包'),
                   ),
@@ -233,7 +260,7 @@ class _PackCrossPageState extends State<PackCrossPage> {
               decoration: BoxDecoration(border: Border.all(width: 0.5)),
               height: totalHeight - 10.0,
               width: MediaQuery.of(context).size.width - 90.0,
-              margin: EdgeInsets.only(top: 10.0,left: 1),
+              margin: EdgeInsets.only(top: 10.0, left: 1),
               child: Column(
                 children: list.map((item) => _buildRightItem(item)).toList(),
               ),
@@ -302,12 +329,22 @@ class _PackCrossPageState extends State<PackCrossPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       "${item.oeCode == null ? '' : item.oeCode}${item.skuName}",
-                      style: TextStyle(fontSize: 12.0, color: Colors.red),
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: item.scanNum > 0
+                            ? Color(0xFF95F204)
+                            : Color(0xFFD9001B),
+                      ),
                     ),
                   ),
                   Text(
                     "${item.scanNum}/${item.num}",
-                    style: TextStyle(fontSize: 12.0, color: Colors.red),
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: item.scanNum > 0
+                          ? Color(0xFF95F204)
+                          : Color(0xFFD9001B),
+                    ),
                   ),
                 ],
               ),
@@ -319,11 +356,27 @@ class _PackCrossPageState extends State<PackCrossPage> {
     );
   }
 
+  /// 包装信息提醒内容
+  Widget _buildPackageRemindLeftItem({
+    required String title,
+    required String? content,
+  }) {
+    return Row(
+      children: [
+        Text(title),
+        Text(
+          content == null ? "" : content,
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
   /// 加载待打包清单
   void _loadWaitPackList() async {
     var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
     var map = {
-      "code": _scanNoController.text,
+      "code": _scanResult,
       "operateConfigModelCode": "scan_store_goods_container_goods_reprint",
       "warehouseCode": warehouseInfo?.warehouseCode,
     };
@@ -341,16 +394,18 @@ class _PackCrossPageState extends State<PackCrossPage> {
 
         groupedMap[carModelName]!.add(
           PackCross(
-            item.carModelName,
-            item.oeName,
-            item.skuCode,
-            item.totalNum,
-            0,
-            // scanNum 初始化为 0
-            false,
-            // isChecked 初始化为 false
-            item.scanNo,
-            item.oeCode,
+            carModelName: item.carModelName,
+            skuName: item.oeName,
+            skuCode: item.skuCode,
+            num: item.totalNum,
+            scanNum: 0,
+            isChecked: false,
+            scanNo: item.scanNo,
+            oeCode: item.oeCode,
+            skuId: item.skuId,
+            saleOrderNo: item.saleOrderNo,
+            externalOrderNo: item.externalOrderNo,
+            outboundOrderNo: item.outboundOrderNo,
           ),
         );
       }
@@ -369,7 +424,59 @@ class _PackCrossPageState extends State<PackCrossPage> {
     });
   }
 
-  void _loadScanPack() {}
+  Future<void> _loadScanPack() async {
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    var map = {
+      "code": _scanNoController.text.trim(),
+      "operateConfigModelCode": "scan_store_goods_container_goods_reprint",
+      "warehouseCode": warehouseInfo!.warehouseCode,
+      "taskNum": _scanNoController.text.trim(),
+    };
+    var result = await _receiveService.packageScanProduct(map);
+    setState(() {
+      _scanNoController.text = "";
+    });
+    if (result.isSuccess) {
+      late PackCrossList moveFirstMap;
+      late PackCross moveFirstItem;
+
+      bool isComplete = false;
+      for (var waitList in list) {
+        if (isComplete) break;
+        for (var item in waitList.waitPackList) {
+          if (isComplete) break;
+          if (item.scanNo == result.data!.scanNo) {
+            isComplete = true;
+            moveFirstMap = waitList;
+            moveFirstItem = item;
+            if (_isReverseScanChecked) {
+              if (item.scanNum < 1) {
+                ShowToastUtils.show('已扫数量为0');
+                break;
+              }
+              item.scanNum = item.scanNum - _addCount;
+              _scanCount -= _addCount;
+              item.isChecked = true;
+              _packProductInfo = result.data;
+            } else {
+              if (item.scanNum >= item.num) {
+                ShowToastUtils.show('已超出数量');
+                break;
+              }
+              waitList.waitPackList.forEach((e) => e.isChecked = false);
+              setState(() {
+                item.scanNum = item.scanNum + _addCount;
+                _scanCount += _addCount;
+                item.isChecked = true;
+                _packProductInfo = result.data;
+              });
+            }
+          }
+        }
+      }
+      _moveItemToTop(moveFirstMap, moveFirstItem);
+    }
+  }
 
   void _loadScanInfo() {
     if (list.isEmpty) {
@@ -388,7 +495,60 @@ class _PackCrossPageState extends State<PackCrossPage> {
       });
       if (list.isEmpty) {
         _loadWaitPackList();
-      } else {}
+      } else {
+        _loadScanPack();
+      }
+    }
+  }
+
+  Future<void> _submit() async {
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    var userInfo = await WarehouseUtils.getUserInfo();
+    var packList = [];
+    for (var packCross in list) {
+      for (var item in packCross.waitPackList) {
+        if (item.scanNum > 0) {
+          packList.add({
+            "oeCode": item.oeCode,
+            "oeName": item.skuName,
+            "num": item.scanNum,
+            "scanNo": item.scanNo,
+            "skuId": item.skuId,
+            "saleOrderNo": item.saleOrderNo,
+            "externalOrderNo": item.externalOrderNo,
+            "outboundOrderNo": item.outboundOrderNo,
+            "packCode": userInfo?.userId.toString(),
+            "packName": userInfo?.realName,
+            "operateConfigModelCode":
+                "scan_store_goods_container_goods_reprint",
+            "warehouseCode": warehouseInfo?.warehouseCode,
+            "warehouseName": warehouseInfo?.warehouseName,
+            "lstActualScanNo": [
+              {"actualScanNo": item.scanNo, "num": item.scanNum},
+            ],
+          });
+        }
+      }
+    }
+    var result = await _receiveService.printPackage(packList);
+    if (result.isSuccess) {
+      //打印包裹单和销售清单
+      _loadWaitPackList();
+      ShowToastUtils.show("打印成功,包裹单号:${result.data?.packageNo}");
+    }
+  }
+
+  /// 将指定项目移动到列表首位
+  void _moveItemToTop(PackCrossList waitList, PackCross item) {
+    if (waitList != null && item != null) {
+      setState(() {
+        // 从当前列表中移除该项目
+        waitList.waitPackList.remove(item);
+        // 将项目添加到列表首位
+        waitList.waitPackList.insert(0, item);
+        list.remove(waitList);
+        list.insert(0, waitList);
+      });
     }
   }
 }
@@ -412,15 +572,23 @@ class PackCross {
   bool isChecked;
   String scanNo;
   String? oeCode;
+  int skuId;
+  String? saleOrderNo;
+  String? externalOrderNo;
+  String? outboundOrderNo;
 
-  PackCross(
-    this.carModelName,
-    this.skuName,
-    this.skuCode,
-    this.num,
-    this.scanNum,
-    this.isChecked,
-    this.scanNo,
-    this.oeCode,
-  );
+  PackCross({
+    required this.carModelName,
+    required this.skuName,
+    required this.skuCode,
+    required this.num,
+    required this.scanNum,
+    required this.isChecked,
+    required this.scanNo,
+    required this.oeCode,
+    required this.skuId,
+    required this.saleOrderNo,
+    required this.externalOrderNo,
+    required this.outboundOrderNo,
+  });
 }

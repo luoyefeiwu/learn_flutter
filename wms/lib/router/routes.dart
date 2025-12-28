@@ -11,6 +11,9 @@ class Routes {
   static const String receiveCross = '/receiveCross';
   static const String qrScanner = '/qrScanner';
   static const String packingCross = '/packingCross';
+  static const String testPage = '/testPage';
+  static const String crossCheck = '/crossCheck';
+
 }
 
 /// 路由参数封装（可选，用于复杂场景）

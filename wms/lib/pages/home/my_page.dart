@@ -22,11 +22,11 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  final ApiClient _api = ApiClient();
   Warehouse? warehouse;
   UserInfo? userInfo;
 
   List<ProjectItem> projectItemList = [];
+  final ApiClient _api = ApiClient();
 
   WarehouseService _warehouseService = WarehouseService();
 
@@ -135,7 +135,14 @@ class _MyPageState extends State<MyPage> {
   List<Widget> _buildMenuItems(BuildContext context) {
     final items = [
       {'icon': Icons.person, 'title': '当前仓库', 'onTap': () {}, 'type': 1},
-      {'icon': Icons.lock, 'title': '设备管理', 'onTap': () {}, 'type': 2},
+      {
+        'icon': Icons.lock,
+        'title': '设备管理',
+        'onTap': () {
+          context.push(Routes.testPage);
+        },
+        'type': 2,
+      },
       {'icon': Icons.notifications, 'title': '修改密码', 'onTap': () {}, 'type': 3},
       {'icon': Icons.payment, 'title': '我的二维码', 'onTap': () {}, 'type': 4},
       {'icon': Icons.language, 'title': '版本更新', 'onTap': () {}, 'type': 5},
@@ -144,6 +151,8 @@ class _MyPageState extends State<MyPage> {
         'title': '清除缓存',
         'onTap': () {
           TokenManager.clearCache(CacheKey.warehouseInfo);
+          TokenManager.clearCache(CacheKey.baseUrl);
+          _api.setBaseUrl();
           context.go(Routes.index, extra: {"refresh": true});
         },
         'type': 6,
@@ -211,6 +220,10 @@ class _MyPageState extends State<MyPage> {
       warehouse = result!;
       userInfo = user;
       projectItemList = projects.data!;
+      ProjectItem projectItem = ProjectItem();
+      projectItem.projectCode = 'fat';
+      projectItem.projectName = 'fat环境';
+      projectItemList.add(projectItem);
     });
   }
 
@@ -220,7 +233,7 @@ class _MyPageState extends State<MyPage> {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-          height: 250,
+          height: 500,
           child: Column(
             children: [
               // 标题栏（可选）
@@ -258,7 +271,7 @@ class _MyPageState extends State<MyPage> {
               // 滚轮选择器
               Expanded(
                 child: CupertinoPicker(
-                  itemExtent: 32,
+                  itemExtent: 40.0,
                   backgroundColor: Colors.white,
                   onSelectedItemChanged: (int index) {
                     selectedIndex = index;
@@ -275,20 +288,28 @@ class _MyPageState extends State<MyPage> {
     ).then((value) async {
       if (value != null) {
         ProjectItem projectItem = value;
-        var detail = await _warehouseService.projectDetail(
-          projectItem.projectCode!,
-        );
-        if (detail.isSuccess) {
-          // await TokenManager.saveCache(
-          //   CacheKey.baseUrl,
-          //   "https://${detail.data?.projectInfo?.apiDomain}",
-          // );
-          // _api.setBaseUrl();
-          context.go(Routes.index, extra: {"refresh": true});
+        if (projectItem.projectCode == 'fat') {
+          await TokenManager.saveCache(
+            CacheKey.baseUrl,
+            "https://fatapi.dingteng.tech",
+          );
+          _api.setBaseUrl();
         } else {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('切换环境失败')));
+          var detail = await _warehouseService.projectDetail(
+            projectItem.projectCode!,
+          );
+          if (detail.isSuccess) {
+            await TokenManager.saveCache(
+              CacheKey.baseUrl,
+              "https://${detail.data?.projectInfo?.apiDomain}",
+            );
+            _api.setBaseUrl();
+            context.go(Routes.index, extra: {"refresh": true});
+          } else {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('切换环境失败')));
+          }
         }
       }
     });

@@ -43,6 +43,9 @@ dependencies:
   json_annotation: ^4.9.0
   mobile_scanner: ^7.1.4
   flutter_native_splash: ^2.4.7
+  esc_pos_printer: ^4.1.0
+  flutter_blue_plus: ^2.1.0
+  permission_handler: ^12.0.1
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +61,9 @@ dev_dependencies:
   json_serializable: ^6.11.3
   flutter_launcher_icons: ^0.14.4
 
+dependency_overrides:
+  image: ^4.7.2
+
 flutter_launcher_icons:
   android: true
   ios: true
@@ -72,10 +78,10 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/img/qidong.png
+  image: assets/img/ic_launcher.png
   android_12:
     color: "#ffffff"
-    image: assets/img/qidong.png
+    image: assets/img/ic_launcher.png
 
   # 执行命令 启动图片 flutter pub run flutter_native_splash:create
 
@@ -133,3 +139,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  # 打印具体日志 --no-devtools --no-dds --verbose

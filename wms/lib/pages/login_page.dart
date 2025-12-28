@@ -17,8 +17,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _passWordController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController(
+    text: 'hcw',
+  );
+  final TextEditingController _passWordController = TextEditingController(
+    text: 'dt881007',
+  );
   bool _obscurePassword = true;
   String baseUrl = "";
 
@@ -188,7 +192,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Row(
               children: [
-                Checkbox(value: true, onChanged: (value) {}),
+                Transform.translate(
+                  offset: Offset(4, 0), // 向左移动 4px
+                  child: Checkbox(
+                    value: true,
+                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, onChanged: (bool? value) {  },
+                  ),
+                ),
                 Text('请阅读并勾选'),
                 TextButton(
                   onPressed: () {},

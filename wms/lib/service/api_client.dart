@@ -13,7 +13,7 @@ class ApiClient {
   // 私有的命名构造函数
   ApiClient._internal() {
     // 基础配置
-    _dio.options.baseUrl = "https://fatapi.dingteng.tech/";
+    _dio.options.baseUrl = Config.baseUrl;
     _dio.options.connectTimeout = const Duration(seconds: 10);
     _dio.options.receiveTimeout = const Duration(seconds: 10);
 
@@ -178,9 +178,9 @@ class ApiClient {
 
   void switchBaseUrl(String newBaseUrl) {
     _dio.close();
-    if (!newBaseUrl.endsWith('/')) {
-      newBaseUrl += '/'; // 自动补全 /
-    }
+    // if (!newBaseUrl.endsWith('/')) {
+    //   newBaseUrl += '/'; // 自动补全 /
+    // }
     _dio.options.baseUrl = newBaseUrl;
   }
 
@@ -188,6 +188,8 @@ class ApiClient {
     var cache = await TokenManager.getCache(CacheKey.baseUrl);
     if (cache != null && cache != '') {
       switchBaseUrl(cache);
+    } else {
+      switchBaseUrl(Config.baseUrl);
     }
   }
 

@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import '../models/pack/PackProductInfo.dart';
+import '../models/pack/PrintPackageInfo.dart';
 import '../models/receive/CrossStorageScanInfo.dart';
 import '../models/receive/WaitScanList.dart';
 import '../utils/ApiResult.dart';
@@ -53,6 +55,35 @@ class ReceiveService {
       fromJson: (json) {
         final map = json as Map<String, dynamic>;
         return WaitScanList.fromJson(map);
+      },
+    );
+    return result;
+  }
+
+  /// 获取零件信息
+  /// {"code":"XS0325121840211X.CG251218121151.1001901","operateConfigModelCode":"scan_store_goods_container_goods_reprint","warehouseCode":"HZC02","taskNum":"XS0325121840211X.CG251218121151.1001901"}
+  Future<ApiResult<PackProductInfo>> packageScanProduct(
+    Map<String, dynamic> map,
+  ) async {
+    var result = await _api.post<PackProductInfo>(
+      '/dtwmsApi/packageManage/packageScanProduct',
+      data: map,
+      fromJson: (json) {
+        final map = json as Map<String, dynamic>;
+        return PackProductInfo.fromJson(map);
+      },
+    );
+    return result;
+  }
+
+  /// 打印包裹
+  Future<ApiResult<PrintPackageInfo>> printPackage(List list) async {
+    var result = await _api.post<PrintPackageInfo>(
+      '/dtwmsApi/packageManage/printPackage',
+      data: list,
+      fromJson: (json) {
+        final map = json as Map<String, dynamic>;
+        return PrintPackageInfo.fromJson(map);
       },
     );
     return result;

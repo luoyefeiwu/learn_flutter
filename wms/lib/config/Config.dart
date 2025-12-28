@@ -15,4 +15,6 @@ class Config {
     CacheKey.warehouseInfo,
     CacheKey.tokenKey,
   ];
+
+  static final baseUrl = 'https://fatapi.dingteng.tech/';
 }

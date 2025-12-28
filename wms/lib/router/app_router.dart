@@ -4,12 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:wms/pages/pack/pack_cross.dart';
 import 'package:wms/pages/receive/receive_cross_page.dart';
 
+import '../pages/check/cross_check_page.dart';
 import '../pages/error_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/index_page.dart';
 import '../pages/login_page.dart';
-
 import '../pages/receive/receive_config_page.dart';
+import '../pages/test_page.dart';
 import '../widgets/common/qr_scanner_page.dart';
 import 'guards.dart';
 import 'routes.dart';
@@ -53,6 +54,17 @@ final appRouter = GoRouter(
       path: Routes.packingCross,
       name: 'packingCross',
       builder: (context, state) => PackCrossPage(),
+    ),
+
+    GoRoute(
+      path: Routes.crossCheck,
+      name: 'crossCheck',
+      builder: (context, state) => CrossCheckPage(),
+    ),
+    GoRoute(
+      path: Routes.testPage,
+      name: 'testPage',
+      builder: (context, state) => TestPage(),
     ),
   ],
   errorBuilder: (context, state) => const ErrorPage(),
