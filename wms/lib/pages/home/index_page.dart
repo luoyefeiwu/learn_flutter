@@ -79,22 +79,26 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Widget _buildItem(Warehouse item) {
-    return RadioListTile(
-      visualDensity: VisualDensity(
-        horizontal: -4, // 负值：更紧凑；正值：更宽松（默认为 0）
+    return Container(
+      child: RadioListTile(
+        visualDensity: VisualDensity(
+          horizontal: -4, // 负值：更紧凑；正值：更宽松（默认为 0）
+        ),
+        dense: true,
+        //contentPadding: EdgeInsets.zero,
+        controlAffinity: ListTileControlAffinity.leading,
+        title: Transform.translate(
+          offset: Offset(-10, 0),
+          child: Text(item.warehouseName, style: TextStyle(fontSize: 18.0)),
+        ),
+        groupValue: _selectedwarehouseCode,
+        onChanged: (value) {
+          setState(() {
+            _selectedwarehouseCode = value;
+          });
+        },
+        value: item.warehouseCode,
       ),
-      dense: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      // 内容内边距
-      // controlAffinity: ListTileControlAffinity.leading, // Radio 位置：leading（左）或 trailing（右）
-      title: Text(item.warehouseName, style: TextStyle(fontSize: 18.0)),
-      groupValue: _selectedwarehouseCode,
-      onChanged: (value) {
-        setState(() {
-          _selectedwarehouseCode = value;
-        });
-      },
-      value: item.warehouseCode,
     );
   }
 

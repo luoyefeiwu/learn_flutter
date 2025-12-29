@@ -1,4 +1,18 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wms/service/check_service.dart';
+import 'package:wms/widgets/common/common_picker.dart';
+import 'package:wms/widgets/common/show_toast_utils.dart';
+
+import '../../models/check/CheckExecutionCountStatus.dart';
+import '../../models/check/CrossCheckInfo.dart';
+import '../../models/check/RepertoryStatus.dart';
+import '../../models/common/CommonModel.dart';
+import '../../router/routes.dart';
+import '../../utils/WarehouseUtils.dart';
+import '../../widgets/common/common_form_item.dart';
 
 /// 越库质检
 class CrossCheckPage extends StatefulWidget {
@@ -9,6 +23,51 @@ class CrossCheckPage extends StatefulWidget {
 }
 
 class _CrossCheckPageState extends State<CrossCheckPage> {
+  CheckService _checkService = CheckService();
+
+  CrossCheckInfo? crossCheckInfo;
+
+  //是否有扫描结果
+  bool isScanHaveResult = false;
+
+  ///扫码号
+  TextEditingController _scanNoController = TextEditingController();
+
+  ///单号
+  TextEditingController _resourceNoController = TextEditingController();
+
+  //质检合格状态
+  int? _checkQualifiedStatus = 0;
+
+  //是否为批量检
+  bool? _batchCheck = false;
+
+  CheckExecutionCountStatus? checkExecutionCountStatus;
+
+  /// 库存状态
+  List<RepertoryStatus> repertoryStatusList = [];
+
+  RepertoryStatus? _checkRepertoryStatus;
+
+  //放行人
+  List<CommonModel> passUserList = [];
+
+  ///选中的放行人
+  CommonModel? _checkPassUser;
+
+  //放行原因
+  List<CommonModel> passReasonList = [];
+
+  ///选中的放行原因
+  CommonModel? _checkPassReason;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadBasic();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +83,38 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
           ),
         ],
       ),
+      bottomSheet: Container(
+        // height: 70,
+        color: Colors.white,
+        padding: EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                side: BorderSide(color: Color.fromARGB(255, 54, 98, 236)),
+                backgroundColor: Color.fromARGB(255, 54, 98, 236),
+              ),
+              onPressed: () {},
+              child: Text('提交', style: TextStyle(color: Colors.white)),
+            ),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                backgroundColor: Color(0xFFF8F8F8),
+                side: BorderSide(color: Colors.grey, width: 1.0),
+              ),
+              onPressed: () {},
+              child: Text('暂存', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
       body: ListView(
         children: [
           _buildTitle(
@@ -31,19 +122,305 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
             hintText: '请输入',
             icon: Icon(Icons.search),
             onTap: () {},
+            controller: _resourceNoController,
+            isJumpScan: false,
           ),
           SizedBox(height: 10),
           _buildTitle(
             title: '零件编码',
             hintText: '请扫码',
             icon: Icon(Icons.camera_alt_outlined),
-            onTap: () {},
+            onTap: () {
+              _loadScanNoData();
+            },
+            controller: _scanNoController,
+            isJumpScan: true,
           ),
           SizedBox(height: 10),
-          Text('质检异常汇总(0)'),
-          _buildCollect(title: '质检异常未跟单', count: 0, onTap: () {}),
-          _buildCollect(title: '质检异常已跟单', count: 0, onTap: () {}),
-          _buildCollect(title: '已完成', count: 0, onTap: () {}),
+          ..._buildContent(),
+          SizedBox(height: 60),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildContent() {
+    List<Widget> list = [];
+    if (isScanHaveResult) {
+      if (crossCheckInfo != null) {
+        list.addAll([
+          Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 3.0,
+                  children: [
+                    Text(
+                      '${crossCheckInfo?.oeName}-${crossCheckInfo?.skuCode} |-${crossCheckInfo?.brandCategoryName == null ? "" : crossCheckInfo?.brandCategoryName}| ${crossCheckInfo?.qualityName == null ? "" : crossCheckInfo?.qualityName}',
+                      style: TextStyle(color: Color.fromARGB(255, 54, 98, 236)),
+                    ),
+                    Text('修理厂: ${crossCheckInfo?.repairName}'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('销售单号: ${crossCheckInfo?.salesOrderCode}'),
+                        Text('开单人: ${crossCheckInfo?.drawer}'),
+                      ],
+                    ),
+                    Text('报价标签: ${crossCheckInfo?.salesOrderTags}'),
+                    Divider(),
+                    Text('供应商: ${crossCheckInfo?.supplierName}'),
+                    Text('采购单号: ${crossCheckInfo?.purchaseOrderCode}'),
+                    Divider(),
+                  ],
+                ),
+              ),
+              Positioned(
+                left: (MediaQuery.of(context).size.width - 20) / 2,
+                bottom: 40.0,
+                //alignment: Alignment.center,
+                child: Transform.rotate(
+                  angle: -30 * math.pi / 180,
+                  child: Container(
+                    height: 60.0,
+                    width: 60.0,
+                    decoration: BoxDecoration(
+                      color: Color(0x66EFEF9E),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '紧急集',
+                        style: TextStyle(color: Colors.red, fontSize: 15.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Positioned(bottom: 90.0, left: 100.0, child: Text('紧急集')),
+            ],
+          ),
+          _buildFormRadio(label: '是否合格', isRequired: true),
+          _buildSelect(
+            label: '库存状态',
+            isRequired: true,
+            name: _checkRepertoryStatus?.repertoryStatusName ?? "",
+            onTap: () {
+              CommonPicker.showPicker(
+                context: context,
+                options: repertoryStatusList
+                    .map((e) => e.repertoryStatusName)
+                    .toList(),
+              ).then((index) {
+                setState(() {
+                  _checkRepertoryStatus = repertoryStatusList[index!];
+                });
+              });
+            },
+          ),
+
+          SizedBox(height: 1),
+          Text('备注'),
+          _buildSelect(
+            label: '放行人 ',
+            isRequired: true,
+            name: _checkPassUser?.name ?? "",
+            onTap: () {
+              CommonPicker.showPicker(
+                context: context,
+                options: passUserList.map((e) => e.name).toList(),
+              ).then((index) {
+                setState(() {
+                  _checkPassUser = passUserList[index!];
+                });
+              });
+            },
+          ),
+          SizedBox(height: 1),
+          _buildSelect(
+            label: '放行原因',
+            isRequired: true,
+            name: _checkPassReason?.name ?? "",
+            onTap: () {
+              CommonPicker.showPicker(
+                context: context,
+                options: passReasonList.map((e) => e.name).toList(),
+              ).then((index) {
+                setState(() {
+                  _checkPassReason = passReasonList[index!];
+                });
+              });
+            },
+          ),
+          SizedBox(height: 1),
+          // Text('图片上传1'),
+          // Text('图片上传2'), Text('图片上传3'),
+          // Text('图片上传4'),
+        ]);
+      }
+    } else {
+      list.addAll([
+        Container(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            '质检异常汇总(${checkExecutionCountStatus?.followQualifiedNum ?? 0})',
+          ),
+        ),
+        _buildCollect(
+          title: '质检异常未跟单',
+          count: checkExecutionCountStatus?.checkExectionFollowNum ?? 0,
+          onTap: () {},
+        ),
+        _buildCollect(
+          title: '质检异常已跟单',
+          count: checkExecutionCountStatus?.checkExectionFollowNum ?? 0,
+          onTap: () {},
+        ),
+        _buildCollect(
+          title: '已完成',
+          count: checkExecutionCountStatus?.finishNum ?? 0,
+          onTap: () {},
+        ),
+      ]);
+    }
+    return list;
+  }
+
+  Widget _buildFormRadio({required String label, required bool isRequired}) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        children: [
+          if (isRequired) Text('*', style: TextStyle(color: Colors.red)),
+          Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
+          Container(
+            child: Row(
+              children: [
+                Radio<int>(
+                  visualDensity: VisualDensity(
+                    horizontal: -4, // 负值：更紧凑；正值：更宽松（默认为 0）
+                  ),
+                  value: 1,
+                  groupValue: _checkQualifiedStatus,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _checkQualifiedStatus = value;
+                    });
+                  },
+                ),
+                Text('合格'),
+              ],
+            ),
+          ),
+
+          Container(
+            child: Row(
+              children: [
+                Radio<int>(
+                  visualDensity: VisualDensity(
+                    horizontal: -4, // 负值：更紧凑；正值：更宽松（默认为 0）
+                  ),
+                  value: 2,
+                  groupValue: _checkQualifiedStatus,
+                  onChanged: (int? value) {
+                    setState(() {
+                      _checkQualifiedStatus = value;
+                    });
+                  },
+                ),
+                Text('不合格'),
+              ],
+            ),
+          ),
+          Container(
+            child: Row(
+              children: [
+                Checkbox(
+                  visualDensity: VisualDensity(
+                    horizontal: -4, // 负值：更紧凑；正值：更宽松（默认为 0）
+                  ),
+                  value: _batchCheck,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _batchCheck = value;
+                    });
+                  },
+                ),
+                Text('批量检'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget _buildSelect({
+  //   required String label,
+  //   required bool isRequired,
+  //   required Function onTap,
+  // }) {
+  //   return ListTile(
+  //     leading: Text(
+  //       isRequired ? '*' : '',
+  //       style: TextStyle(color: Colors.red),
+  //     ),
+  //     title: Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
+  //     trailing: Icon(Icons.arrow_forward_ios, size: 16),
+  //     onTap: () {
+  //       onTap();
+  //     },
+  //   );
+  // }
+
+  Widget _buildSelect({
+    required String label,
+    required bool isRequired,
+    required Function onTap,
+    required String name,
+  }) {
+    return Container(
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Row(
+              children: [
+                if (isRequired) Text('*', style: TextStyle(color: Colors.red)),
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 15.0, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                onTap();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  // border: Border.all(color: Colors.grey),
+                  // border: Border(
+                  //   bottom: BorderSide(color: Colors.grey, width: 1.0),
+                  // ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [Text(name), Icon(Icons.keyboard_arrow_right)],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -54,6 +431,8 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
     required String hintText,
     required Icon icon,
     required Function onTap,
+    required TextEditingController controller,
+    required bool isJumpScan,
   }) {
     return Container(
       child: Row(
@@ -68,6 +447,7 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
             child: Container(
               padding: EdgeInsets.only(right: 10.0),
               child: TextField(
+                controller: controller,
                 decoration: InputDecoration(
                   hintText: hintText,
                   border: const OutlineInputBorder(
@@ -77,7 +457,11 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
                   suffixIcon: IconButton(
                     icon: icon,
                     onPressed: () {
-                      onTap();
+                      if (isJumpScan) {
+                        _startScan(controller, onTap);
+                      } else if (onTap != null) {
+                        onTap();
+                      }
                     },
                   ),
                   contentPadding: EdgeInsets.symmetric(
@@ -86,6 +470,22 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
                   ),
                   isDense: true,
                 ),
+                onSubmitted: (value) {
+                  if (controller.text.trim().isNotEmpty) {
+                    onTap();
+                  }
+                },
+                onChanged: (value) {
+                  if (value.trim().isNotEmpty) {
+                    setState(() {
+                      isScanHaveResult = true;
+                    });
+                  } else {
+                    setState(() {
+                      isScanHaveResult = false;
+                    });
+                  }
+                },
               ),
             ),
           ),
@@ -128,5 +528,84 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
         ),
       ),
     );
+  }
+
+  ///加载扫码接口
+  void _loadScanNoData() async {
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    var map = {
+      "scanNo": _scanNoController.text.trim(),
+      "resourceNumbers": _resourceNoController.text.trim(),
+      "warehouseCode": warehouseInfo?.warehouseCode,
+    };
+    var result = await _checkService.queryScanNoInfo(map);
+    if (result.isSuccess) {
+      setState(() {
+        crossCheckInfo = result.data!;
+      });
+    } else {
+      ShowToastUtils.show(result.message);
+    }
+  }
+
+  Future<void> _loadBasic() async {
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    _checkService
+        .queryCheckInventor(warehouseInfo!.warehouseCode, 1)
+        .then(
+          (result) => {
+            if (result.isSuccess)
+              {
+                setState(() {
+                  repertoryStatusList = result.data!;
+                }),
+              },
+          },
+        );
+
+    _checkService
+        .findCheckExection(warehouseInfo.warehouseCode)
+        .then(
+          (result) => {
+            if (result.isSuccess)
+              {
+                setState(() {
+                  checkExecutionCountStatus = result.data;
+                }),
+              },
+          },
+        );
+
+    _checkService.findPassUser().then(
+      (result) => {
+        if (result.isSuccess)
+          {
+            setState(() {
+              passUserList = result.data!;
+            }),
+          },
+      },
+    );
+
+    _checkService.findPassReason().then(
+      (itme) => {
+        if (itme.isSuccess)
+          {
+            setState(() {
+              passReasonList = itme.data!;
+            }),
+          },
+      },
+    );
+  }
+
+  void _startScan(TextEditingController controller, Function onTap) async {
+    final result = await context.push(Routes.qrScanner);
+    if (result != null) {
+      setState(() {
+        controller.text = (result as String?)!;
+      });
+      if (onTap != null) onTap();
+    }
   }
 }
