@@ -19,7 +19,8 @@ class CommonPicker {
             children: [
               // 标题栏
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                height: 50.0,
+                //padding: const EdgeInsets.symmetric(vertical: 1),
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(

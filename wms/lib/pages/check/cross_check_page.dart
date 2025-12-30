@@ -12,6 +12,7 @@ import '../../models/check/RepertoryStatus.dart';
 import '../../models/common/CommonModel.dart';
 import '../../router/routes.dart';
 import '../../utils/WarehouseUtils.dart';
+import '../../widgets/common/Loading.dart';
 import '../../widgets/common/common_form_item.dart';
 
 /// 越库质检
@@ -208,6 +209,7 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
             ],
           ),
           _buildFormRadio(label: '是否合格', isRequired: true),
+          Divider(),
           _buildSelect(
             label: '库存状态',
             isRequired: true,
@@ -225,9 +227,10 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
               });
             },
           ),
-
+          Divider(),
           SizedBox(height: 1),
-          Text('备注'),
+          _buildInput(label: '备注', isRequired: false),
+          Divider(),
           _buildSelect(
             label: '放行人 ',
             isRequired: true,
@@ -243,6 +246,7 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
               });
             },
           ),
+          Divider(),
           SizedBox(height: 1),
           _buildSelect(
             label: '放行原因',
@@ -259,6 +263,7 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
               });
             },
           ),
+          Divider(),
           SizedBox(height: 1),
           // Text('图片上传1'),
           // Text('图片上传2'), Text('图片上传3'),
@@ -293,9 +298,35 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
     return list;
   }
 
+  Widget _buildInput({required String label, required bool isRequired}) {
+    return Container(
+      height: 40.0,
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Row(
+        children: [
+          if (isRequired) Text('*', style: TextStyle(color: Colors.red)),
+          Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10), // 调整垂直方向的padding
+                hintText: '请输入内容',
+                hintStyle: TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFormRadio({required String label, required bool isRequired}) {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      height: 30.0,
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
       child: Row(
         children: [
           if (isRequired) Text('*', style: TextStyle(color: Colors.red)),
@@ -361,24 +392,6 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
       ),
     );
   }
-
-  // Widget _buildSelect({
-  //   required String label,
-  //   required bool isRequired,
-  //   required Function onTap,
-  // }) {
-  //   return ListTile(
-  //     leading: Text(
-  //       isRequired ? '*' : '',
-  //       style: TextStyle(color: Colors.red),
-  //     ),
-  //     title: Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
-  //     trailing: Icon(Icons.arrow_forward_ios, size: 16),
-  //     onTap: () {
-  //       onTap();
-  //     },
-  //   );
-  // }
 
   Widget _buildSelect({
     required String label,
@@ -532,19 +545,23 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
 
   ///加载扫码接口
   void _loadScanNoData() async {
-    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
-    var map = {
-      "scanNo": _scanNoController.text.trim(),
-      "resourceNumbers": _resourceNoController.text.trim(),
-      "warehouseCode": warehouseInfo?.warehouseCode,
-    };
-    var result = await _checkService.queryScanNoInfo(map);
+    var result;
+    try {
+      LoadingManager.showLoading(context);
+      var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+      var map = {
+        "scanNo": _scanNoController.text.trim(),
+        "resourceNumbers": _resourceNoController.text.trim(),
+        "warehouseCode": warehouseInfo?.warehouseCode,
+      };
+      result = await _checkService.queryScanNoInfo(map);
+    } finally {
+      LoadingManager.hideLoading(context);
+    }
     if (result.isSuccess) {
       setState(() {
         crossCheckInfo = result.data!;
       });
-    } else {
-      ShowToastUtils.show(result.message);
     }
   }
 

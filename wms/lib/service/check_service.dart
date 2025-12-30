@@ -51,9 +51,9 @@ class CheckService {
   Future<ApiResult<CheckExecutionCountStatus>> findCheckExection(
     String warehouseCode,
   ) async {
-    var result = await _api.post<CheckExecutionCountStatus>(
+    var result = await _api.get<CheckExecutionCountStatus>(
       '/dtwmsApi/check/findCheckExection?warehouseCode=$warehouseCode',
-      data: {},
+      queryParameters: {},
       fromJson: (json) {
         final map = json as Map<String, dynamic>;
         return CheckExecutionCountStatus.fromJson(map);

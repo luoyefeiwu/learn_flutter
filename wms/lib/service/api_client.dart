@@ -57,16 +57,16 @@ class ApiClient {
             return;
           }
           if (response.data['code'] != 200 && response.data['code'] != 0) {
-            Fluttertoast.showToast(
-              msg: response.data['msg'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black12,
-              textColor: Colors.black,
-              fontSize: 16.0,
+            handler.reject(
+              DioException(
+                requestOptions: response.requestOptions,
+                response: response,
+                type: DioExceptionType.badResponse,
+                error: '业务逻辑错误: ${response.data['msg']}',
+              ),
+              true,
             );
-            //return;
+            return;
           }
           return handler.next(response);
         },
@@ -132,7 +132,7 @@ class ApiClient {
           message = '服务器内部错误';
           break;
         default:
-          message = e.response?.statusMessage ?? '未知错误';
+          message = e.response?.data['msg'] ?? '未知错误';
       }
     } else if (e.type == DioExceptionType.connectionTimeout) {
       message = '连接超时';
@@ -147,7 +147,16 @@ class ApiClient {
     }
 
     // 全局 Toast 提示（可替换为 SnackBar）
-    Fluttertoast.showToast(msg: message);
+    //Fluttertoast.showToast(msg: message);
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black12,
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
     debugPrint('【Dio Error】$message');
   }
 
