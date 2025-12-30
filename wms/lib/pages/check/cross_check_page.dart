@@ -13,7 +13,6 @@ import '../../models/common/CommonModel.dart';
 import '../../router/routes.dart';
 import '../../utils/WarehouseUtils.dart';
 import '../../widgets/common/Loading.dart';
-import '../../widgets/common/common_form_item.dart';
 
 /// 越库质检
 class CrossCheckPage extends StatefulWidget {
@@ -62,6 +61,8 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
   ///选中的放行原因
   CommonModel? _checkPassReason;
 
+  TextEditingController _remarkController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -99,7 +100,9 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
                 side: BorderSide(color: Color.fromARGB(255, 54, 98, 236)),
                 backgroundColor: Color.fromARGB(255, 54, 98, 236),
               ),
-              onPressed: () {},
+              onPressed: () {
+                _submit();
+              },
               child: Text('提交', style: TextStyle(color: Colors.white)),
             ),
             OutlinedButton(
@@ -229,7 +232,11 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
           ),
           Divider(),
           SizedBox(height: 1),
-          _buildInput(label: '备注', isRequired: false),
+          _buildInput(
+            label: '备注',
+            isRequired: false,
+            controller: _remarkController,
+          ),
           Divider(),
           _buildSelect(
             label: '放行人 ',
@@ -298,7 +305,11 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
     return list;
   }
 
-  Widget _buildInput({required String label, required bool isRequired}) {
+  Widget _buildInput({
+    required String label,
+    required bool isRequired,
+    required TextEditingController controller,
+  }) {
     return Container(
       height: 40.0,
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -308,8 +319,12 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
           Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
           Expanded(
             child: TextField(
+              controller: controller,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10), // 调整垂直方向的padding
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 10,
+                ), // 调整垂直方向的padding
                 hintText: '请输入内容',
                 hintStyle: TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(
@@ -614,6 +629,65 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
           },
       },
     );
+  }
+
+  void _submit() async {
+    if (crossCheckInfo == null) {
+      ShowToastUtils.show("请扫码");
+      return;
+    }
+
+    var warehouseInfo = await WarehouseUtils.getWarehouseInfo();
+    var map = {
+      "scanNo": _scanNoController.text.trim(),
+      "qualifiedStatus": _checkQualifiedStatus,
+      "inventoryStatusCode": _checkRepertoryStatus?.repertoryStatusCode,
+      "remark": _remarkController.text.trim(),
+      "unqualifiedReason": "配件破损",
+      "warehouseCode": warehouseInfo?.warehouseCode,
+      "files": [
+        "https://dingteng02.oss-cn-hangzhou.aliyuncs.com/javatest/images/oms/1767092532766WXUQWw1mfDqY0fo4b.png",
+      ],
+      "recordId": "",
+      "id": crossCheckInfo?.id,
+      "woodenFrame": crossCheckInfo?.showWoodenFrame,
+      "resourceNumbers": crossCheckInfo?.resourceNumbers,
+      "num": 1,
+      "isEmergency": crossCheckInfo?.isEmergency,
+      "isWaitCheck": crossCheckInfo?.isWaitCheck,
+      "isCollect": crossCheckInfo?.isCollect,
+      "isPackage": crossCheckInfo?.isPackage,
+      "isCheckSign": crossCheckInfo?.isCheckSign,
+      "isLargeOrderAArea": crossCheckInfo?.isLargeOrderAArea,
+      "isLargeOrderBArea": crossCheckInfo?.isLargeOrderBArea,
+      "passUserCode": _checkPassUser?.optionCode,
+      "passUserName": _checkPassUser?.name,
+      "otherPassUser": "",
+      "passReasonCode": _checkPassReason?.optionCode,
+      "otherReason": "",
+    };
+    var result;
+    try {
+      LoadingManager.showLoading(context);
+      result = await _checkService.checkCommit(map);
+      if (result.isSuccess) {
+        ShowToastUtils.show("提交成功");
+      }
+    } finally {
+      LoadingManager.hideLoading(context);
+    }
+    if (result.isSuccess) {
+      setState(() {
+        crossCheckInfo = null;
+        _checkPassUser = null;
+        _checkPassReason = null;
+        _checkRepertoryStatus = null;
+        _checkQualifiedStatus = 1;
+        _batchCheck = false;
+        _resourceNoController.text = "";
+        _scanNoController.text = "";
+      });
+    }
   }
 
   void _startScan(TextEditingController controller, Function onTap) async {
