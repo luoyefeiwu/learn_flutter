@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wms/models/common/UploadRespon.dart';
 import 'package:wms/service/check_service.dart';
 import 'package:wms/widgets/common/common_picker.dart';
 import 'package:wms/widgets/common/show_toast_utils.dart';
@@ -13,6 +15,8 @@ import '../../models/common/CommonModel.dart';
 import '../../router/routes.dart';
 import '../../utils/WarehouseUtils.dart';
 import '../../widgets/common/Loading.dart';
+import '../../widgets/common/common_image.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// 越库质检
 class CrossCheckPage extends StatefulWidget {
@@ -62,6 +66,10 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
   CommonModel? _checkPassReason;
 
   TextEditingController _remarkController = TextEditingController();
+
+  // List<File> _imageList = [];
+
+  List<Map<File, UploadRespon>> _imageList = [];
 
   @override
   void initState() {
@@ -272,9 +280,18 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
           ),
           Divider(),
           SizedBox(height: 1),
-          // Text('图片上传1'),
-          // Text('图片上传2'), Text('图片上传3'),
-          // Text('图片上传4'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('图片上传'), Text('${_imageList.length}/9')],
+          ),
+          CommonImagePicker(
+            onChange: (List<Map<File, UploadRespon>> value) {
+              setState(() {
+                _imageList = value;
+              });
+            },
+            imageSource: ImageSource.gallery,
+          ),
         ]);
       }
     } else {
@@ -316,7 +333,13 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
       child: Row(
         children: [
           if (isRequired) Text('*', style: TextStyle(color: Colors.red)),
-          Text(label, style: TextStyle(fontSize: 15.0, color: Colors.black)),
+          Container(
+            width: 80.0,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 15.0, color: Colors.black),
+            ),
+          ),
           Expanded(
             child: TextField(
               controller: controller,
@@ -645,9 +668,10 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
       "remark": _remarkController.text.trim(),
       "unqualifiedReason": "配件破损",
       "warehouseCode": warehouseInfo?.warehouseCode,
-      "files": [
-        "https://dingteng02.oss-cn-hangzhou.aliyuncs.com/javatest/images/oms/1767092532766WXUQWw1mfDqY0fo4b.png",
-      ],
+      "files": _imageList
+          .map((map) => map.values.first)
+          .map((uploadRespon) => uploadRespon.fullUrl!)
+          .toList(),
       "recordId": "",
       "id": crossCheckInfo?.id,
       "woodenFrame": crossCheckInfo?.showWoodenFrame,
@@ -686,6 +710,8 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
         _batchCheck = false;
         _resourceNoController.text = "";
         _scanNoController.text = "";
+        _remarkController.text = "";
+        _imageList.clear();
       });
     }
   }

@@ -28,7 +28,10 @@ class ApiClient {
               options.headers[CacheKey.tokenKey] = token;
             }
           }
-          options.headers['Content-Type'] = 'application/json';
+          if (options.headers['Content-Type'] == null ||
+              options.headers['Content-Type'] == '') {
+            options.headers['Content-Type'] = 'application/json';
+          }
           options.headers['appcode'] = CacheKey.appcode;
           options.headers['appType'] = CacheKey.appType;
           options.headers['appVersion'] = CacheKey.appVersion;
@@ -176,11 +179,13 @@ class ApiClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     T Function(Object? json)? fromJson,
+    Options? options,
   }) async {
     final response = await _dio.post(
       path,
       data: data,
       queryParameters: queryParameters,
+      options: options,
     );
     return ApiResult.fromJson(response.data, fromJson ?? (json) => json as T);
   }
