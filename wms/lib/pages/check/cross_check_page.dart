@@ -87,9 +87,14 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
         centerTitle: true,
         backgroundColor: Colors.white,
         actions: [
-          Text(
-            '质检记录',
-            style: TextStyle(color: Color.fromARGB(255, 54, 98, 236)),
+          GestureDetector(
+            onTap: () {
+              context.push(Routes.crossCheckRecord);
+            },
+            child: Text(
+              '质检记录',
+              style: TextStyle(color: Color.fromARGB(255, 54, 98, 236)),
+            ),
           ),
         ],
       ),
@@ -675,7 +680,7 @@ class _CrossCheckPageState extends State<CrossCheckPage> {
       "recordId": "",
       "id": crossCheckInfo?.id,
       "woodenFrame": crossCheckInfo?.showWoodenFrame,
-      "resourceNumbers": crossCheckInfo?.resourceNumbers,
+      "resourceNumbers": "",
       "num": 1,
       "isEmergency": crossCheckInfo?.isEmergency,
       "isWaitCheck": crossCheckInfo?.isWaitCheck,

@@ -13,7 +13,7 @@ class Routes {
   static const String packingCross = '/packingCross';
   static const String testPage = '/testPage';
   static const String crossCheck = '/crossCheck';
-
+  static const String crossCheckRecord = '/crossCheckRecord';
 }
 
 /// 路由参数封装（可选，用于复杂场景）

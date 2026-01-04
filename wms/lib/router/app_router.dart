@@ -5,6 +5,7 @@ import 'package:wms/pages/pack/pack_cross.dart';
 import 'package:wms/pages/receive/receive_cross_page.dart';
 
 import '../pages/check/cross_check_page.dart';
+import '../pages/check/cross_check_record_page.dart';
 import '../pages/error_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/index_page.dart';
@@ -60,6 +61,11 @@ final appRouter = GoRouter(
       path: Routes.crossCheck,
       name: 'crossCheck',
       builder: (context, state) => CrossCheckPage(),
+    ),
+    GoRoute(
+      path: Routes.crossCheckRecord,
+      name: 'crossCheckRecord',
+      builder: (context, state) => CrossCheckRecordPage(),
     ),
     GoRoute(
       path: Routes.testPage,

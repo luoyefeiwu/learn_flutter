@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -181,6 +183,13 @@ class ApiClient {
     T Function(Object? json)? fromJson,
     Options? options,
   }) async {
+
+    if (kDebugMode) {
+      print(
+        '【请求】${path} | data: ${jsonEncode(data)}',
+      );
+    }
+
     final response = await _dio.post(
       path,
       data: data,
