@@ -18,10 +18,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _userNameController = TextEditingController(
-    text: 'hcw',
+    text: '',
   );
   final TextEditingController _passWordController = TextEditingController(
-    text: 'dt881007',
+    text: '',
   );
   bool _obscurePassword = true;
   String baseUrl = "";
