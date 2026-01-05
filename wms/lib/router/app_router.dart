@@ -11,6 +11,7 @@ import '../pages/home/home_page.dart';
 import '../pages/home/index_page.dart';
 import '../pages/login_page.dart';
 import '../pages/receive/receive_config_page.dart';
+import '../pages/receive/receive_normal_page.dart';
 import '../pages/test_page.dart';
 import '../widgets/common/qr_scanner_page.dart';
 import 'guards.dart';
@@ -66,6 +67,11 @@ final appRouter = GoRouter(
       path: Routes.crossCheckRecord,
       name: 'crossCheckRecord',
       builder: (context, state) => CrossCheckRecordPage(),
+    ),
+    GoRoute(
+      path: Routes.receiveNormal,
+      name: 'receiveNormal',
+      builder: (context, state) => ReceiveNormalPage(),
     ),
     GoRoute(
       path: Routes.testPage,

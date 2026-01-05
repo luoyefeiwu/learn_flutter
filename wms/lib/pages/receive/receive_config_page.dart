@@ -42,6 +42,8 @@ class _ReceiveConfigPageState extends State<ReceiveConfigPage> {
       onTap: () {
         if (item.operateModelCode == 'yk') {
           context.push(Routes.receiveCross);
+        } else {
+          context.push(Routes.receiveNormal);
         }
       },
       child: Container(

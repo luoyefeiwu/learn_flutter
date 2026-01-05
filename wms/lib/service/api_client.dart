@@ -200,7 +200,7 @@ class ApiClient {
   }
 
   void switchBaseUrl(String newBaseUrl) {
-    _dio.close();
+    //_dio.close();
     // if (!newBaseUrl.endsWith('/')) {
     //   newBaseUrl += '/'; // 自动补全 /
     // }
