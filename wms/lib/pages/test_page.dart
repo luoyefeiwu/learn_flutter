@@ -1,6 +1,10 @@
+import 'package:charset_converter/charset_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:wms/template/print/PackTemplate.dart';
+
+import '../service/print_service.dart';
+import '../utils/PrintUtils.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -16,16 +20,18 @@ class _TestPageState extends State<TestPage> {
   BluetoothDevice? _selectedDevice;
   BluetoothCharacteristic? _printCharacteristic;
 
+  PrintService _printService = PrintService();
+
   // 1. 初始化蓝牙（检查权限+开启蓝牙）
   Future<void> _initBluetooth() async {
     // 申请权限（Android）
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      await [
-        Permission.bluetoothScan,
-        Permission.bluetoothConnect,
-        Permission.location,
-      ].request();
-    }
+    // if (Theme.of(context).platform == TargetPlatform.android) {
+    //   await [
+    //     Permission.bluetoothScan,
+    //     Permission.bluetoothConnect,
+    //     Permission.location,
+    //   ].request();
+    // }
 
     // ✅ 修正：检查蓝牙可用性（静态方法）
     if (!await FlutterBluePlus.isSupported) {
@@ -108,6 +114,7 @@ class _TestPageState extends State<TestPage> {
       _showToast("连接成功，可开始打印");
     } catch (e) {
       _showToast("连接失败：$e");
+      print(e);
       await device.disconnect();
     }
   }
@@ -118,26 +125,17 @@ class _TestPageState extends State<TestPage> {
       _showToast("未连接打印机");
       return;
     }
-
-    // ESC/POS 指令（芝科 XT453 测试）
-    // List<int> printData = [
-    //   0x1B, 0x40, // 初始化
-    //   ..."芝科 XT453 测试打印\n".codeUnits,
-    //   0x1B, 0x69, // 切纸
-    // ];
-
-    List<int> printData = [
-      0x1B, 0x40, // 初始化
-      0x1B, 0x61, 0x01, // 居中
-      ..."Test\n".codeUnits, // 打印 TEST
-      0x0A, 0x0A, // 两个空行
-      0x1D, 0x56, 0x41, 0x03, // 全切纸（关键！）
-    ];
-
+    String epl2 = '''
+! 0 200 10 100 1\r\n
+TEXT 10 20 20 20 包裹BG2312 \r\n
+PRINT\r\n
+''';
+    List<int> data = await CharsetConverter.encode("GBK", epl2);
     try {
-      await _printCharacteristic!.write(printData, withoutResponse: false);
+      await _printCharacteristic!.write(data, withoutResponse: false);
       _showToast("打印成功");
     } catch (e) {
+      print(e);
       _showToast("打印失败：$e");
     }
   }
@@ -191,19 +189,16 @@ class _TestPageState extends State<TestPage> {
                   onPressed: () async {
                     await FlutterBluePlus.stopScan();
                     _scanDevices();
-                    // if (await FlutterBluePlus.isScanning.first) {
-                    //   FlutterBluePlus.stopScan();
-                    // } else {
-                    //   await FlutterBluePlus.stopScan();
-                    //   _scanDevices();
-                    // }
                   },
                   child: const Text("扫描打印机"),
                 ),
                 ElevatedButton(
-                  onPressed: _printCharacteristic == null ? null : _printTest,
+                  onPressed: _printCharacteristic == null
+                      ? null
+                      : printWrapSheet,
                   child: const Text("打印测试"),
                 ),
+                ElevatedButton(onPressed: printInfo, child: const Text("直接打印")),
               ],
             ),
             const SizedBox(height: 16),
@@ -229,5 +224,70 @@ class _TestPageState extends State<TestPage> {
         ),
       ),
     );
+  }
+
+  Future<void> printWrapSheet() async {
+    var map = {
+      "packageCoSourcingNo": "BGHZC0220260106000002",
+      "warehouseCode": "HZC02",
+      "source": 2,
+    };
+    var result = await _printService.printWrapSheet(map);
+    if (result.isSuccess) {
+      if (_printCharacteristic == null) {
+        _showToast("未连接打印机");
+        return;
+      }
+
+      var printPackage = PackTemplate.printPackage(
+        time: DateTime.now(),
+        list: result.data!,
+      );
+      List<int> data = await CharsetConverter.encode("GBK", printPackage);
+      try {
+        _sendLongData(data);
+        _showToast("打印成功");
+      } catch (e) {
+        print(e);
+        _showToast("打印失败：$e");
+      }
+    }
+  }
+
+  Future<void> _sendLongData(List<int> data) async {
+    const int chunkSize = 200; // 每包200字节，留出安全余量
+
+    for (int i = 0; i < data.length; i += chunkSize) {
+      int endIndex = (i + chunkSize < data.length)
+          ? i + chunkSize
+          : data.length;
+      List<int> chunk = data.sublist(i, endIndex);
+
+      await _printCharacteristic!.write(chunk, withoutResponse: false);
+
+      // 添加延迟确保打印机处理
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+  }
+
+  Future<void> printInfo() async {
+    var map = {
+      "packageCoSourcingNo": "BGHZC0220260106000002",
+      "warehouseCode": "HZC02",
+      "source": 2,
+    };
+    var result = await _printService.printWrapSheet(map);
+    if (result.isSuccess) {
+      PrintUtils.printInfo(
+        targetMac: "01:39:69:50:73:52",
+        dataProvider: () async {
+          String epl2 = PackTemplate.printPackage(
+            time: DateTime.now(),
+            list: result.data!,
+          );
+          return await CharsetConverter.encode("GBK", epl2);
+        },
+      );
+    }
   }
 }

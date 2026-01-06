@@ -1,9 +1,15 @@
-
-
+import 'package:charset_converter/charset_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wms/models/Warehouse.dart';
+import 'package:wms/models/pack/PrintPackageInfo.dart';
+import 'package:wms/service/print_service.dart';
+import 'package:wms/template/print/PackTemplate.dart';
+import 'package:wms/utils/PrintUtils.dart';
+import 'package:wms/widgets/common/Loading.dart';
 import 'package:wms/widgets/common/show_toast_utils.dart';
 
+import '../../enum/PrintScene.dart';
 import '../../models/pack/PackProductInfo.dart';
 import '../../router/routes.dart';
 import '../../service/receive_service.dart';
@@ -24,6 +30,8 @@ class _PackCrossPageState extends State<PackCrossPage> {
   TextEditingController _scanNoController = TextEditingController();
 
   ReceiveService _receiveService = ReceiveService();
+
+  PrintService _printService = PrintService();
 
   FocusNode _focusNode = FocusNode();
 
@@ -532,9 +540,15 @@ class _PackCrossPageState extends State<PackCrossPage> {
     }
     var result = await _receiveService.printPackage(packList);
     if (result.isSuccess) {
+      LoadingManager.showLoading(context, message: "打印中...");
+      try {
+        await printInfo(result.data, warehouseInfo);
+      } finally {
+        LoadingManager.hideLoading(context);
+      }
       //打印包裹单和销售清单
       _loadWaitPackList();
-      ShowToastUtils.show("打印成功,包裹单号:${result.data?.packageNo}");
+      //  ShowToastUtils.show("打印成功,包裹单号:${result.data?.packageNo}");
     }
   }
 
@@ -549,6 +563,38 @@ class _PackCrossPageState extends State<PackCrossPage> {
         list.remove(waitList);
         list.insert(0, waitList);
       });
+    }
+  }
+
+  Future<void> printInfo(
+    PrintPackageInfo? data,
+    Warehouse? warehouseInfo,
+  ) async {
+    var map = {
+      "packageCoSourcingNo": data?.packageNo,
+      "warehouseCode": warehouseInfo?.warehouseCode,
+      "source": 1,
+    };
+    var result = await _printService.printWrapSheet(map);
+    if (result.isSuccess) {
+      var myPrintConfig = await PrintUtils.findMyPrintConfig(
+        PrintScene.packFace,
+      );
+      String? deviceId = myPrintConfig?.printInfo?.deviceId;
+      if (deviceId != null) {
+        PrintUtils.printInfo(
+          targetMac: deviceId,
+          dataProvider: () async {
+            String epl2 = PackTemplate.printPackage(
+              time: DateTime.now(),
+              list: result.data!,
+            );
+            return await CharsetConverter.encode("GBK", epl2);
+          },
+        );
+      } else {
+        ShowToastUtils.show('未找到打印设备');
+      }
     }
   }
 }
